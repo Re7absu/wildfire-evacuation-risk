@@ -9,8 +9,9 @@ Usage::
 The output keeps every input column and adds:
 
 * ``risk_12h_pct`` ... ``risk_72h_pct`` - probability (%) that the fire comes
-  within 5 km of an evacuation zone within each horizon;
-* ``risk_percentage`` - the headline risk, equal to the 72 h risk;
+  within 5 km of an evacuation zone within each horizon (counted from t0+5h);
+* ``risk_percentage`` - the headline risk, equal to the 48 h risk (the
+  horizon the competition weights most: "the strongest operational value zone");
 * ``risk_band`` - Low (0-25), Medium (25-50), High (50-75), Critical (75-100).
 """
 
@@ -29,7 +30,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.data import ID_COL  # noqa: E402
-from src.model import risk_band  # noqa: E402
+from src.model import HEADLINE_HORIZON, risk_band  # noqa: E402
 
 DEFAULT_MODEL: Path = ROOT / "models" / "fire_risk_model.joblib"
 
@@ -67,7 +68,8 @@ def predict_frame(df: pd.DataFrame, bundle: dict) -> pd.DataFrame:
     risk = bundle["model"].predict_risk(X).round(2)
     out = df.reset_index(drop=True).copy()
     out[risk.columns] = risk.to_numpy()
-    out["risk_percentage"] = risk[f"risk_{max(bundle['horizons'])}h_pct"].to_numpy()
+    headline = bundle.get("headline_horizon", HEADLINE_HORIZON)
+    out["risk_percentage"] = risk[f"risk_{headline}h_pct"].to_numpy()
     out["risk_band"] = risk_band(out["risk_percentage"]).astype(str).to_numpy()
     return out
 

@@ -1,22 +1,41 @@
 # Fire Crisis Risk Prediction
 
-Predict the **risk (0–100%) that a wildfire comes within 5 km of an evacuation zone** within the next **12, 24, 48 and 72 hours**, using only what was observed in the fire's first 5 hours.
+Predict the **risk (0–100%) that a wildfire comes within 5 km of an evacuation zone** within **12, 24, 48 and 72 hours** after t0+5h, using only what was observed in the fire's first 5 hours.
 
-Data: WiDS Worldwide Global Datathon 2026 (wildfire evacuation task).
+Data and scoring: WiDS Worldwide Global Datathon 2026 (wildfire evacuation task).
 
 ---
 
 ## 1. Goal and problem framing
 
-The raw target is **survival-style**: `time_to_hit_hours` (0–72 h) plus `event` (1 = the fire came within 5 km of an evacuation zone, 0 = it never did within the 72 h window). The data dictionary says `event = 0` means "never hit within 72 h", so each horizon gets a clean **binary** label:
+Emergency managers need two things from a forecast:
+- a **ranking** of fires by urgency, for triage
+- **calibrated probabilities**, for threshold-based warnings
+
+The competition frames this as **right-censored survival analysis**:
+- If a fire hits within the 72 h window: `event = 1`, and `time_to_hit_hours` is the observed time from t0+5h.
+- If it doesn't: `event = 0`, and `time_to_hit_hours` is the last observed time (≤ 72 h).
+
+We submit **P(hit by 12 / 24 / 48 / 72 h)** per fire. Each horizon is modelled with its own binary classifier, so this is a classification framing with **risk % = `predict_proba × 100`**. The four probabilities are forced to be non-decreasing (P(12h) ≤ P(24h) ≤ P(48h) ≤ P(72h)).
+
+### Evaluation metric (implemented in `src/model.py`)
 
 ```
-hit_h = (event == 1) and (time_to_hit_hours <= h)      for h in {12, 24, 48, 72}
+Hybrid          = 0.3 × C-index + 0.7 × (1 − Weighted Brier)
+Weighted Brier  = 0.3 × Brier@24h + 0.4 × Brier@48h + 0.3 × Brier@72h
 ```
 
-We therefore use **classification**: one classifier per horizon, with **risk % = `predict_proba × 100`**. The four probabilities are forced to be non-decreasing (P(12h) ≤ P(24h) ≤ P(48h) ≤ P(72h)), because a fire cannot be less likely to have hit by 48 h than by 24 h. This also produces the competition's submission format (`prob_12h … prob_72h`).
+Each Brier@H is **censor-aware**, and the same rule defines our training labels (`censor_aware_labels` in `src/data.py`):
 
-The headline `risk_percentage` reported by the CLI is the **72 h risk**, and `risk_band` is derived from it.
+| Fire | Label at horizon H |
+|---|---|
+| hit at time t | 1 if t ≤ H, else 0 |
+| censored at time t > H | 0 |
+| censored at time t ≤ H | **excluded** |
+
+- **C-index:** Harrell's concordance on an urgency score, the mean of the four probabilities. The competition does not state which score it uses, so the 72 h column is made rank-consistent with the others (see §7). The C-index then comes out the same whichever column is ranked.
+- **Model selection and tuning** both maximise the Hybrid score.
+- **Headline risk:** the CLI's `risk_percentage` is the **48 h risk**, the horizon the metric weights most. `risk_band` is derived from it.
 
 ## 2. Dataset
 
@@ -40,7 +59,16 @@ There are no missing values, no duplicates and no `event_id` overlap between tra
 | Directionality | `alignment_cos/abs`, `cross_track_component`, `along_track_speed` | whether the fire moves toward the evacuation zone |
 | Time metadata | `event_start_hour`, `event_start_dayofweek`, `event_start_month` | when the fire started |
 
-**Target:** `event` (1 = hit within 72 h, 31% of fires) and `time_to_hit_hours`. They become `hit_12h` (22%), `hit_24h` (28%), `hit_48h` (30%) and `hit_72h` (31%).
+**Target:** `event` (1 = hit within 72 h, 31% of fires) and `time_to_hit_hours`. Censored fires were last observed at 0.4–67 h, never at 72 h, so the censor-aware labels look like this (all 221 training fires):
+
+| Horizon | Positive | Negative | Excluded (censored before H) |
+|---|---|---|---|
+| 12 h | 49 | 166 | 6 |
+| 24 h | 63 | 133 | 25 |
+| 48 h | 66 | 100 | 55 |
+| 72 h | 69 | **0** | 152 |
+
+At 72 h every evaluable fire is a hit.
 
 ## 3. Setup and run (uv only, inside WSL)
 
@@ -79,9 +107,9 @@ fire-risk-model/
 │   └── test/           test_set.csv (15% held out), sample_input.csv, sample_predictions.csv
 ├── notebooks/          01_eda, 02_training, 03_evaluation
 ├── src/
-│   ├── data.py         loading, validation, cleaning, horizon labels
+│   ├── data.py         loading, validation, cleaning, censor-aware horizon labels
 │   ├── features.py     engineered features + FeatureEngineer transformer
-│   ├── model.py        pipeline builder, MultiHorizonRiskModel, metrics, risk bands
+│   ├── model.py        pipeline builder, MultiHorizonRiskModel, competition metric, risk bands
 │   └── predict.py      CLI: score a CSV with the saved model
 ├── models/fire_risk_model.joblib
 └── reports/
@@ -98,11 +126,11 @@ fire-risk-model/
 flowchart LR
     A[Raw CSVs<br/>data/raw] --> B[Cleaning & validation<br/>src/data.py]
     B --> C[EDA<br/>01_eda.ipynb]
-    B --> D[Horizon labels<br/>hit_12h…hit_72h]
+    B --> D[Censor-aware labels<br/>hit_12h…hit_72h]
     D --> E[Stratified split<br/>85% dev / 15% test]
     E -->|dev| F[Pipeline per horizon<br/>FeatureEngineer → Imputer → Scaler → Classifier]
-    F --> G[5-fold CV model comparison<br/>LR · RF · GB · baseline]
-    G --> H[GridSearchCV on best family<br/>refit = mean Brier]
+    F --> G[5-fold CV comparison<br/>LR · RF · GB · baseline × 2 label strategies<br/>scored by Hybrid]
+    G --> H[GridSearchCV on best<br/>refit = Hybrid score]
     H --> I[(models/fire_risk_model.joblib)]
     E -->|test, untouched| J[Evaluation<br/>03_evaluation.ipynb]
     I --> J
@@ -115,44 +143,64 @@ flowchart LR
 Full details are in `notebooks/01_eda.ipynb`.
 
 1. **A single feature separates the 72 h outcome perfectly.** Every fire that hit had a minimum distance to an evacuation zone of ≤ 4.7 km in its first 5 h, and every fire that didn't was ≥ 5.2 km away. The target itself is defined at 5 km. Whether a fire hits is almost a lookup; **when** it hits is the real problem. See [01_distance_vs_target.png](reports/figures/01_distance_vs_target.png).
-2. **Hits come early:** median 3.5 h, and 49 of the 69 hits happen within 12 h. See [01_target_distribution.png](reports/figures/01_target_distribution.png).
+2. **Hits come early and censoring is heavy.** The median time to hit is 3.5 h, and 49 of the 69 hits happen within 12 h. Censored fires were last observed before 72 h, so the metric excludes 25 / 55 / 152 of them at 24 / 48 / 72 h. See [01_target_distribution.png](reports/figures/01_target_distribution.png).
 3. **Growth and movement features are mostly zero.** 73% of fires have only one perimeter, so about 89% of growth values are 0 and the rest are extremely skewed. See [01_feature_histograms.png](reports/figures/01_feature_histograms.png) and [01_boxplots.png](reports/figures/01_boxplots.png).
 4. **There are redundant feature groups**, e.g. identical relative-growth columns. See [01_correlation_heatmap.png](reports/figures/01_correlation_heatmap.png).
 5. **Fires with several perimeters hit more often** (60% vs 20%), which is likely a monitoring/selection effect. See [01_category_hit_rates.png](reports/figures/01_category_hit_rates.png).
 6. **There are no date, location or categorical columns.** Seasonality is weak (fires peak in Jun–Aug). See [01_time_trends_month.png](reports/figures/01_time_trends_month.png) and [01_top_correlations.png](reports/figures/01_top_correlations.png).
 
-**Consequences for modelling:** tree ensembles (the signal is a sharp threshold and the features are zero-inflated), engineered distance features (`log_dist_min`, `dist_minus_radius_km`, `eta_hours`), stratified splits, and Brier score as the primary metric so that the risk % stays calibrated.
+**Consequences for modelling:**
+- tree ensembles, because the signal is a sharp threshold and the features are zero-inflated
+- engineered distance features: `log_dist_min`, `dist_minus_radius_km`, `eta_hours`
+- stratified splits
+- censor-aware labels
+- the official Hybrid score as the selection metric. It is 70% Brier, so calibration matters most.
 
 ## 7. Model comparison and final metrics
 
 **Split:** stratified 85% development (187 rows) / 15% test (34 rows), `random_state=42`. Model selection uses 5-fold CV on the development set. With 221 rows, a separate 15% validation set would be too small to be useful.
 
-**5-fold CV on the development set** ([02_cv_model_comparison.png](reports/figures/02_cv_model_comparison.png)):
+**Label strategies compared:**
+- `censor_aware`: censored-before-H fires are dropped from the H model, exactly like the metric.
+- `metadata`: censored fires are negatives at every horizon.
 
-| Model | Mean Brier ↓ | Mean ROC-AUC ↑ | C-index ↑ |
+**5-fold CV on the development set, official metric** ([02_cv_model_comparison.png](reports/figures/02_cv_model_comparison.png)):
+
+| Model | Labels | Hybrid ↑ | Weighted Brier ↓ | C-index ↑ |
+|---|---|---|---|---|
+| Baseline (prior) | censor-aware | 0.7381 | 0.1599 | 0.5000 |
+| LogisticRegression | censor-aware | 0.9384 | 0.0500 | 0.9112 |
+| GradientBoosting | metadata | 0.9686 | 0.0207 | 0.9434 |
+| RandomForest (default) | metadata | 0.9728 | 0.0181 | 0.9516 |
+| RandomForest (default) | censor-aware | 0.9735 | 0.0185 | 0.9546 |
+| **RandomForest (tuned)** | **censor-aware** | **0.9756** | **0.0145** | **0.9527** |
+
+**Final model:** a Random Forest per horizon (`n_estimators=500, max_features=0.5, min_samples_leaf=5, max_depth=None`), trained on censor-aware labels.
+
+**The 72 h horizon:** under censor-aware labels, every evaluable training fire is a hit, so there is nothing to classify. The 72 h output is the smoothed base rate c ≈ 0.98, plus a rank-preserving term: `c + (1 − c) · mean(P12, P24, P48)`. This minimises Brier@72h and keeps the column ordered by urgency. It is a metric artefact, not an operational forecast.
+
+**Held-out test set (34 fires, 11 hits), competition metric** (`reports/test_metrics.csv`, [03_competition_score.png](reports/figures/03_competition_score.png)):
+
+| Metric | Test | 95% bootstrap CI | 5-fold CV (dev) |
 |---|---|---|---|
-| Baseline (class prior) | 0.199 | 0.500 | 0.500 |
-| LogisticRegression | 0.074 | 0.958 | 0.911 |
-| GradientBoosting | 0.031 | 0.988 | 0.943 |
-| RandomForest (default) | 0.026 | 0.991 | 0.952 |
-| **RandomForest (tuned)** | **0.021** | **0.993** | **0.952** |
+| **Hybrid score** | **0.972** | 0.943 – 0.995 | 0.976 |
+| Weighted Brier | 0.013 | 0.000 – 0.039 | 0.015 |
+| C-index | 0.936 | 0.879 – 0.988 | 0.953 |
+| Brier@24h / @48h / @72h | 0.038 / 0.003 / 0.000 | | |
 
-The final model is a Random Forest per horizon: `n_estimators=500, max_features=0.5, min_samples_leaf=3, max_depth=None`.
+**Per-horizon classification on evaluable rows (threshold 0.5):**
 
-**Held-out test set (34 fires, 11 hits)**, from `reports/test_metrics.csv`:
-
-| Horizon | ROC-AUC (95% bootstrap CI) | PR-AUC | Brier | Accuracy | Precision | Recall | F1 |
+| Horizon | Evaluable | ROC-AUC | PR-AUC | Accuracy | Precision | Recall | F1 |
 |---|---|---|---|---|---|---|---|
-| 12 h | 0.966 (0.89–1.00) | 0.907 | 0.057 | 0.882 | 0.750 | 0.750 | 0.750 |
-| 24 h | 0.971 (0.89–1.00) | 0.906 | 0.030 | 0.971 | 0.909 | 1.000 | 0.952 |
-| 48 h | 1.000 | 1.000 | 0.002 | 1.000 | 1.000 | 1.000 | 1.000 |
-| 72 h | 1.000 | 1.000 | 0.000 | 1.000 | 1.000 | 1.000 | 1.000 |
+| 12 h | 33 | 0.975 | 0.929 | 0.879 | 0.750 | 0.750 | 0.750 |
+| 24 h | 27 | 0.976 | 0.957 | 0.963 | 0.909 | 1.000 | 0.952 |
+| 48 h | 24 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
+| 72 h | 11 (all hits) | n/a | n/a | 1.000 | n/a | 1.000 | n/a |
 
-Overall: **mean Brier 0.022**, **mean ROC-AUC 0.984**, **C-index 0.933**.
-
-- **Calibration** is close to the diagonal on both the test set and the out-of-fold development set ([03_calibration.png](reports/figures/03_calibration.png)).
-- **Timing among fires that hit:** telling an early hit (≤ 12 h) from a late one gives AUC ≈ 0.80 out-of-fold ([03_timing_among_hits.png](reports/figures/03_timing_among_hits.png)).
-- **Permutation importance** is dominated by `dist_min_ci_0_5h` ([03_permutation_importance.png](reports/figures/03_permutation_importance.png)).
+- **Calibration:** the 12/24/48 h out-of-fold reliability curves sit on the diagonal ([03_calibration.png](reports/figures/03_calibration.png)).
+- **C-index robustness:** ranking on `prob_12h`, `prob_24h` or `prob_48h` gives 0.933, and ranking on `prob_72h` gives 0.944.
+- **Timing among fires that hit:** telling an early hit (≤ 12 h) from a late one gives AUC ≈ 0.78 out-of-fold. This is the main limit on the C-index ([03_timing_among_hits.png](reports/figures/03_timing_among_hits.png)).
+- **Permutation importance** (Hybrid drop) is dominated by `dist_min_ci_0_5h` ([03_permutation_importance.png](reports/figures/03_permutation_importance.png)).
 - **Risk bands:** see [03_risk_bands.png](reports/figures/03_risk_bands.png).
 
 ## 8. Predicting on new data
@@ -167,11 +215,11 @@ The output contains the original columns plus:
 
 | Column | Meaning |
 |---|---|
-| `risk_12h_pct` … `risk_72h_pct` | probability (%) that the fire comes within 5 km of an evacuation zone within each horizon |
-| `risk_percentage` | headline risk, equal to the 72 h risk |
-| `risk_band` | Low (0–25) · Medium (25–50) · High (50–75) · Critical (75–100) |
+| `risk_12h_pct` … `risk_72h_pct` | probability (%) that the fire comes within 5 km of an evacuation zone within each horizon (from t0+5h) |
+| `risk_percentage` | headline risk, equal to the **48 h** risk (the horizon the metric weights most) |
+| `risk_band` | Low (0–25) · Medium (25–50) · High (50–75) · Critical (75–100), from `risk_percentage` |
 
-To produce the competition submission as well:
+To produce the competition submission (`event_id, prob_12h, prob_24h, prob_48h, prob_72h`, monotone, in [0, 1]):
 
 ```bash
 uv run python src/predict.py --input data/raw/test.csv --output reports/test_predictions.csv --submission reports/submission.csv
@@ -180,15 +228,17 @@ uv run python src/predict.py --input data/raw/test.csv --output reports/test_pre
 ## 9. Limitations and next steps
 
 **Limitations**
-- **Very small dataset** (221 labelled fires, 34 for testing). The 12/24 h confidence intervals are wide.
-- **The 72 h result rests on one threshold** (distance ≈ 5 km). A fire just beyond 5 km that grows fast could still hit, but the training data has no such case, so the model would say about 0%.
-- **Probabilities are extreme (about 0% or 100%).** In an operational setting, floor the risk at a small value instead of reporting 0%.
+- **Very small dataset** (221 labelled fires, 34 for testing). The Hybrid score's confidence interval is about ±0.03.
+- **The C-index score definition is not stated by the competition.** We rank on the mean probability and made the 72 h column rank-consistent as a hedge.
+- **The 72 h probability (about 98–100% for every fire) is a scoring artefact.** No censored fire is evaluable at 72 h. Use the 12/24/48 h risks for decisions.
+- **Whether a fire hits rests on one threshold** (distance ≈ 5 km). A fire just beyond 5 km that grows fast could still hit, but there is no such case in training.
+- **Probabilities at 12–48 h are extreme (about 0% or 100%).** In operations, floor the risk at a small value.
 - **Timing (early vs. late hit) is only moderately predictable** from 5 h of perimeter data.
 - **Possible monitoring bias:** fires with more perimeters hit more often.
 - **No weather, wind, fuel or terrain inputs.**
 
 **Next steps**
 - Add wind speed and direction, fuel moisture, slope and road-network distance.
-- Try a proper survival model (e.g. a discrete-time hazard model or random survival forest) that uses the censoring times directly.
+- Try a proper survival model (a discrete-time hazard model, random survival forest, or AFT model) or IPCW-weighted classifiers that use the censoring times directly.
 - Use repeated or nested CV for more stable model selection on such small data.
-- Calibrate the probability floor and ceiling with domain experts, and validate on fires from another season or region.
+- Validate on fires from another season or region.

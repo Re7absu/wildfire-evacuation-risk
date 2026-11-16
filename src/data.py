@@ -114,16 +114,50 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     return out.reset_index(drop=True)
 
 
+def censor_aware_labels(
+    time: np.ndarray | pd.Series,
+    event: np.ndarray | pd.Series,
+    horizons: tuple[int, ...] = HORIZONS,
+) -> pd.DataFrame:
+    """Competition (censor-aware) labels per horizon, with NaN where unknown.
+
+    Follows the official evaluation rule for horizon ``H``:
+
+    * hit (``event == 1``): 1 if ``time <= H`` else 0
+    * censored after H (``event == 0`` and ``time > H``): 0
+    * censored before H (``event == 0`` and ``time <= H``): **excluded** (NaN),
+      because we do not know whether the fire hit between its last
+      observation and ``H``.
+
+    Args:
+        time: ``time_to_hit_hours`` values.
+        event: ``event`` indicator values.
+        horizons: Horizons in hours.
+
+    Returns:
+        Data frame with float columns ``hit_<h>h`` in {0, 1, NaN}.
+    """
+    t = np.asarray(time, dtype=float)
+    e = np.asarray(event, dtype=int)
+    out = {}
+    for h in horizons:
+        lab = np.where((e == 1) & (t <= h), 1.0, 0.0)
+        lab[(e == 0) & (t <= h)] = np.nan
+        out[f"hit_{h}h"] = lab
+    return pd.DataFrame(out)
+
+
 def horizon_labels(
     time: np.ndarray | pd.Series,
     event: np.ndarray | pd.Series,
     horizons: tuple[int, ...] = HORIZONS,
 ) -> pd.DataFrame:
-    """Build one binary label per horizon: did the fire hit within ``h`` hours?
+    """Fully-defined binary label per horizon, treating censored rows as negatives.
 
-    Per the data dictionary, ``event == 0`` means the fire never came within 5 km
-    of an evacuation zone during the 72 h window, so censored rows are true
-    negatives at every horizon and the label is fully defined.
+    This is the *metadata* reading (``event == 0`` = "never hit within 72 h").
+    The competition metric is stricter and excludes rows censored before the
+    horizon; see :func:`censor_aware_labels`. This version is kept for EDA and
+    as an alternative training-label strategy.
 
     Args:
         time: ``time_to_hit_hours`` values.
