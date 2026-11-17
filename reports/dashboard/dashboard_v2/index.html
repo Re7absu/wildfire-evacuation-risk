@@ -1,0 +1,429 @@
+<meta name="dash-one-writer">
+<style>
+  /* Results report, second take: scorecard first, then why (distance, timing), then how good (score parts, models, calibration), then the forecast table. */
+  .wr { display: flex; flex-direction: column; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+  .wr h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+  .wr h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; text-wrap: balance; }
+  .wr p { margin: 0; line-height: 1.5; max-width: 70ch; }
+  .wr .muted { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .wr .eyebrow { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .wr .head { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+  .wr .card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-md); min-width: 0; }
+  .wr .score { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--cds-gap-lg); }
+  .wr .score > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .wr .score .big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .wr .score .k { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .wr .chip { align-self: flex-start; font-size: var(--cds-font-size-caption); padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; }
+  .wr .chip.ok { color: var(--color-ok); } .wr .chip.bad { color: var(--color-bad); } .wr .chip.warn { color: var(--color-warn); }
+  .wr .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--cds-gap-lg); }
+  .wr .grid2 > * { min-width: 0; }
+  .wr .chart { position: relative; width: 100%; min-height: 220px; }
+  .wr .chart svg { display: block; width: 100%; overflow: visible; }
+  .wr .chart text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); }
+  .wr .chart .val { fill: var(--color-fg); font-variant-numeric: tabular-nums; }
+  .wr .chart .grid line { stroke: var(--cds-chart-grid); }
+  .wr .chart .axis path, .wr .chart .axis line { stroke: var(--cds-chart-axis); }
+  .wr .chart .fail { padding: var(--cds-pad-md); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .wr .tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; z-index: 2; font-variant-numeric: tabular-nums; }
+  .wr .tip > :first-child { font-weight: var(--cds-font-weight-medium); }
+  .wr .legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .wr .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .wr .sw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .wr .sw.hit { background: var(--cds-chart-status-critical); } .wr .sw.nohit { background: var(--cds-chart-muted); }
+  .wr .tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm); }
+  .wr .tablewrap { overflow: auto; max-height: 420px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
+  .wr table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .wr th, .wr td { text-align: right; padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .wr th:first-child, .wr td:first-child { text-align: left; }
+  .wr thead th { position: sticky; top: 0; background: var(--color-panel); color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+  .wr .pill { display: inline-block; padding: 0 8px; border-radius: 999px; border: 1px solid currentColor; }
+  .wr .pill.Low { color: var(--color-ok); } .wr .pill.Medium, .wr .pill.High { color: var(--color-warn); } .wr .pill.Critical { color: var(--color-bad); }
+  .wr .meter { display: inline-block; width: 60px; height: 6px; border-radius: 3px; background: var(--cds-chart-grid); vertical-align: middle; margin-left: 6px; overflow: hidden; }
+  .wr .meter > i { display: block; height: 100%; background: var(--cds-chart-status-critical); }
+  .wr ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--cds-gap-xs); max-width: 70ch; line-height: 1.5; }
+  .wr details summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+  .wr details[open] summary { margin-bottom: var(--cds-gap-sm); }
+</style>
+
+<div class="wr" data-read lang="en">
+
+  <header class="head" id="summary">
+    <span class="eyebrow">Wildfire evacuation risk · model results</span>
+    <h1>Wildfire Evacuation Risk Model</h1>
+    <p>On fires it had never seen, the model scored <b data-draw="val" data-source="test_scores" data-where="metric=hybrid" data-field="value" data-fmt="3">—</b> on the competition's Hybrid score, against <b data-draw="val" data-source="model_cv" data-where="model=Baseline (average)" data-field="hybrid" data-fmt="3">—</b> for a model that just guesses the average.</p>
+    <p class="muted">It predicts the chance (%) that a wildfire comes within 5 km of an evacuation zone within 12, 24, 48 and 72 hours, using only the fire's first 5 hours. Data: WiDS Global Datathon 2026.</p>
+  </header>
+
+  <section class="card" id="scorecard" aria-label="Scorecard">
+    <div class="score">
+      <div id="sc-hybrid">
+        <span class="k">Hybrid score · test</span>
+        <span class="big" data-draw="val" data-source="test_scores" data-where="metric=hybrid" data-field="value" data-fmt="3">—</span>
+        <span class="chip ok">+<span data-draw="val" data-source="lift" data-row="0" data-field="gain" data-fmt="3">—</span> over baseline (CV)</span>
+      </div>
+      <div id="sc-cindex">
+        <span class="k">Ranking accuracy (C-index) · test</span>
+        <span class="big" data-draw="val" data-source="test_scores" data-where="metric=c_index" data-field="value" data-fmt="pct0">—</span>
+        <span class="k">Fire pairs put in the right order</span>
+      </div>
+      <div id="sc-brier">
+        <span class="k">Weighted Brier · test</span>
+        <span class="big" data-draw="val" data-source="test_scores" data-where="metric=brier" data-field="value" data-fmt="3">—</span>
+        <span class="k">Error of the risk %, lower is better</span>
+      </div>
+      <div id="sc-critical">
+        <span class="k">New fires flagged Critical at 48 h</span>
+        <span class="big" data-draw="val" data-source="band_counts" data-where="band=Critical" data-field="fires" data-fmt="int">—</span>
+        <span class="chip bad">of <span data-draw="val" data-source="band_counts" data-where="band=All" data-field="fires" data-fmt="int">—</span> new fires</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="why-distance">
+    <span class="eyebrow">Why</span>
+    <h2>A fire within about 5 km of a zone hits; one farther away does not</h2>
+    <p>Of <b data-draw="val" data-source="fire_stats" data-row="0" data-field="fires" data-fmt="int">—</b> training fires, <b data-draw="val" data-source="fire_stats" data-row="0" data-field="hits" data-fmt="int">—</b> reached a zone. All of them started within <b data-draw="val" data-source="fire_stats" data-row="0" data-field="farthest_hit_km" data-fmt="1">—</b> km; every other fire was at least <b data-draw="val" data-source="fire_stats" data-row="0" data-field="closest_nohit_km" data-fmt="1">—</b> km away.</p>
+    <div class="legend"><span><i class="sw hit"></i>Reached a zone</span><span><i class="sw nohit"></i>Did not</span><span>Dashed line: 5 km</span></div>
+    <div class="chart" data-draw="strip" data-source="fires" id="chart-strip"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card" id="timing">
+      <span class="eyebrow">When</span>
+      <h2>Fires that hit, hit early</h2>
+      <p class="muted">Training fires that had reached a zone by each time limit.</p>
+      <div class="chart" data-draw="timing" data-source="label_counts" id="chart-timing"></div>
+    </section>
+
+    <section class="card" id="score-parts">
+      <span class="eyebrow">How good</span>
+      <h2>Errors are largest at 12 and 24 hours</h2>
+      <p class="muted">Brier score (error of the risk %) on test fires at each time limit. The Hybrid score weights 24 h 30%, 48 h 40% and 72 h 30%.</p>
+      <div class="chart" data-draw="brier" data-source="test_scores" id="chart-brier"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="card" id="models">
+      <span class="eyebrow">Model choice</span>
+      <h2>Tree models beat a simple guess by a wide margin</h2>
+      <p class="muted">Hybrid score, 5-fold cross-validation on the training fires.</p>
+      <div class="chart" data-draw="models" data-source="model_cv" id="chart-models"></div>
+    </section>
+
+    <section class="card" id="calibration">
+      <span class="eyebrow">Trust</span>
+      <h2>Predicted risk matches what really happened</h2>
+      <p class="muted">Predicted risk vs. the share of test fires that really hit. Points near the dashed line mean the % is honest.</p>
+      <div class="chart" data-draw="calibration" data-source="calibration" id="chart-calibration"></div>
+    </section>
+  </div>
+
+  <section class="card" id="forecast">
+    <span class="eyebrow">Forecast</span>
+    <h2>Risk for every new fire</h2>
+    <p class="muted">The competition test fires have no known outcome. Sorted by 48 hour risk; filter by band.</p>
+    <div class="tools">
+      <label class="muted" for="band-filter">Band</label>
+      <select class="dash-select" id="band-filter" aria-label="Filter by risk band">
+        <option value="">All bands</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+    <div class="tablewrap">
+      <table data-source="new_fires" data-row-key="event_id" aria-label="Predicted risk for new fires">
+        <thead><tr><th data-field="event_id">Fire</th><th data-field="distance_km">Distance (km)</th><th data-field="risk_12h">12 h %</th><th data-field="risk_24h">24 h %</th><th data-field="risk_48h">48 h %</th><th data-field="band">Band</th></tr></thead>
+        <tbody data-draw="fire-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card" id="importance">
+      <span class="eyebrow">What drives it</span>
+      <h2>The model relies almost only on distance</h2>
+      <p class="muted">Drop in the test Hybrid score when one feature is shuffled.</p>
+      <div class="chart" data-draw="importance" data-source="importance" id="chart-importance"></div>
+    </section>
+
+    <section class="card" id="limits">
+      <span class="eyebrow">Read with care</span>
+      <h2>Limitations</h2>
+      <ul>
+        <li>Small data: <span data-draw="val" data-source="fire_stats" data-row="0" data-field="fires" data-fmt="int">—</span> fires in total, so every score has some uncertainty.</li>
+        <li>Weaker at predicting <em>when</em> a fire hits than <em>whether</em> it does.</li>
+        <li>The 72 hour risk is about 98% for every fire, a side effect of the scoring rule. Use 12, 24 and 48 hours for decisions.</li>
+        <li>No weather, wind or terrain data yet. Adding it is the best next step.</li>
+      </ul>
+      <details id="glossary">
+        <summary>What the scores mean</summary>
+        <ul>
+          <li><b>Hybrid score</b>: 0.3 × C-index + 0.7 × (1 − weighted Brier). Higher is better.</li>
+          <li><b>C-index</b>: how often the more urgent of two fires is ranked first.</li>
+          <li><b>Brier score</b>: average squared gap between predicted chance and what happened (0 is perfect).</li>
+          <li><b>Cross-validation</b>: the training fires are split into 5 parts; each part is scored by a model trained on the other 4.</li>
+        </ul>
+      </details>
+    </section>
+  </div>
+</div>
+
+<script>
+  // ---------- calculated figures (same as the current dashboard) ----------
+  dash.calc('fire_stats', {
+    inputs: ['fires'],
+    title: 'Training fire summary',
+    description: 'Counts and distance limits over all training fires.',
+    fn: (fires) => {
+      const hits = fires.filter((f) => +f.hit === 1);
+      const misses = fires.filter((f) => +f.hit === 0);
+      return [{
+        fires: fires.length,
+        hits: hits.length,
+        hit_rate_pct: fires.length ? Math.round((100 * hits.length) / fires.length) : null,
+        farthest_hit_km: d3.max(hits, (f) => +f.distance_km),
+        closest_nohit_km: d3.min(misses, (f) => +f.distance_km),
+      }];
+    },
+  });
+  dash.calc('lift', {
+    inputs: ['model_cv'],
+    title: 'Gain over the baseline',
+    description: 'Tuned Random Forest Hybrid score minus the baseline score (cross-validation).',
+    fn: (models) => {
+      const get = (name) => +(models.find((m) => m.model === name) || {}).hybrid;
+      const baseline = get('Baseline (average)');
+      const tuned = get('Random Forest (tuned)');
+      return [{ baseline, tuned, gain: tuned - baseline }];
+    },
+  });
+  dash.calc('band_counts', {
+    inputs: ['new_fires'],
+    title: 'New fires per 48 h risk band',
+    description: 'Competition test fires counted by their 48 hour risk band.',
+    fn: (newFires) => ['Low', 'Medium', 'High', 'Critical']
+      .map((band) => ({ band, fires: newFires.filter((f) => f.band === band).length }))
+      .concat([{ band: 'All', fires: newFires.length }]),
+  });
+
+  // ---------- helpers ----------
+  window.wr = {
+    band: '',
+    fmt(v, how) {
+      if (v === null || v === undefined || Number.isNaN(+v)) return '—';
+      if (how === 'pct0') return Math.round(+v * 100) + '%';
+      if (how === 'int') return d3.format(',')(Math.round(+v));
+      if (how === '1') return (+v).toFixed(1);
+      return (+v).toFixed(3);
+    },
+    row(src, el) {
+      const d = dash.data(src);
+      if (d.status !== 'ok' || !Array.isArray(d.data)) return null;
+      if (el.dataset.where) {
+        const [k, v] = el.dataset.where.split('=');
+        return d.data.find((r) => String(r[decodeURIComponent(k)]) === decodeURIComponent(v)) || null;
+      }
+      return d.data[+(el.dataset.row || 0)] || null;
+    },
+    rows(el, src) {
+      const d = dash.data(src);
+      if (d.status === 'ok' && Array.isArray(d.data) && d.data.length) { el.classList.remove('dash-skeleton'); return d.data; }
+      if (d.status === 'loading' || d.status === 'connect') { el.replaceChildren(); el.classList.add('dash-skeleton'); return null; }
+      el.classList.remove('dash-skeleton');
+      const p = document.createElement('div'); p.className = 'fail'; p.textContent = 'Failed to load';
+      el.replaceChildren(p);
+      return null;
+    },
+    tip(el) {
+      return {
+        show(ev, lines) {
+          let t = el.querySelector(':scope > .tip');
+          if (!t) { t = document.createElement('div'); t.className = 'tip'; el.appendChild(t); }
+          t.replaceChildren(...lines.map((s) => { const d = document.createElement('div'); d.textContent = s; return d; }));
+          t.hidden = false;
+          const box = el.getBoundingClientRect();
+          let x = ev.clientX - box.left + 12;
+          if (x + t.offsetWidth > box.width) x = ev.clientX - box.left - t.offsetWidth - 12;
+          t.style.left = Math.max(0, x) + 'px'; t.style.top = ev.clientY - box.top + 12 + 'px';
+        },
+        hide() { const t = el.querySelector(':scope > .tip'); if (t) t.hidden = true; },
+      };
+    },
+    svg(el, h, label) {
+      return d3.select(el).append('svg').attr('viewBox', `0 0 ${Math.max(el.clientWidth, 280)} ${h}`).attr('height', h).attr('role', 'img').attr('aria-label', label);
+    },
+    labelWidth(svg, texts) {
+      const probe = svg.append('text');
+      const w = d3.max(texts, (s) => { probe.text(s); return probe.node().getComputedTextLength(); }) || 0;
+      probe.remove();
+      return w;
+    },
+  };
+
+  // The band filter only listens, then redraws the table.
+  for (const sel of document.querySelectorAll('#band-filter')) sel.onchange = () => { wr.band = sel.value; dash.draw('fire-table'); };
+
+  // ---------- single values ----------
+  dash.draw('val', (el) => {
+    const d = dash.data(el.dataset.source);
+    if (d.status === 'loading') { el.textContent = ''; el.classList.add('dash-skeleton'); return; }
+    el.classList.remove('dash-skeleton');
+    const r = wr.row(el.dataset.source, el);
+    el.textContent = r ? wr.fmt(r[el.dataset.field], el.dataset.fmt) : '—';
+  });
+</script>
+
+<script>
+  // ---------- Distance strip: one lane per outcome ----------
+  dash.draw('strip', (el) => {
+    const rows = wr.rows(el, 'fires'); if (!rows) return;
+    el.replaceChildren();
+    const W = Math.max(el.clientWidth, 280), H = 190, m = { t: 10, r: 14, b: 32, l: 0 };
+    const svg = wr.svg(el, H, 'Strip plot of distance to the evacuation zone for fires that hit and fires that did not; the two groups split at about 5 km.');
+    const lanes = [['Reached a zone', 1], ['Did not', 0]];
+    m.l = wr.labelWidth(svg, lanes.map((l) => l[0])) + 12;
+    const x = d3.scaleLog().domain([0.05, d3.max(rows, (r) => +r.distance_km) * 1.2]).range([m.l, W - m.r]);
+    const y = d3.scaleBand().domain(lanes.map((l) => l[0])).range([m.t, H - m.b]).padding(0.25);
+    const xt = W < 520 ? [0.1, 1, 10, 100] : [0.1, 1, 5, 10, 100, 500];
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickValues(xt).tickSize(-(H - m.b - m.t)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickValues(xt).tickFormat((d) => d + ' km'));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).tickSize(0)).call((g) => g.select('.domain').remove());
+    svg.append('line').attr('x1', x(5)).attr('x2', x(5)).attr('y1', m.t).attr('y2', H - m.b).style('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4').attr('stroke-width', 1.5);
+    // a fixed jitter per fire so the dots don't sit on one line
+    const jit = (id) => ((d3.sum(String(id), (c) => c.charCodeAt(0)) * 9301 + 49297) % 233280) / 233280 - 0.5;
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('circle').data(rows).join('circle')
+      .attr('cx', (r) => x(Math.max(+r.distance_km, 0.05)))
+      .attr('cy', (r) => { const lane = +r.hit === 1 ? lanes[0][0] : lanes[1][0]; return y(lane) + y.bandwidth() / 2 + jit(r.event_id) * y.bandwidth() * 0.8; })
+      .attr('r', 4).style('fill', (r) => (+r.hit === 1 ? 'var(--cds-chart-status-critical)' : 'var(--cds-chart-muted)')).style('fill-opacity', 0.8)
+      .on('pointermove', (ev, r) => tip.show(ev, [`Fire ${r.event_id}`, `${(+r.distance_km).toFixed(1)} km from a zone`, +r.hit === 1 ? `Hit after ${(+r.hours).toFixed(1)} h` : 'No hit']))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // ---------- Timing: hits reached by each limit ----------
+  dash.draw('timing', (el) => {
+    const rows = wr.rows(el, 'label_counts'); if (!rows) return;
+    el.replaceChildren();
+    const W = Math.max(el.clientWidth, 280), H = 220, m = { t: 22, r: 18, b: 30, l: 36 };
+    const svg = wr.svg(el, H, 'Line of how many fires had hit by 12, 24, 48 and 72 hours; it rises steeply then flattens.');
+    const x = d3.scalePoint().domain(rows.map((r) => r.horizon)).range([m.l, W - m.r]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, d3.max(rows, (r) => +r.hit) * 1.1]).nice().range([H - m.b, m.t]);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickFormat((d) => 'by ' + d));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4));
+    svg.append('path').datum(rows).attr('d', d3.line().x((r) => x(r.horizon)).y((r) => y(+r.hit))).style('fill', 'none').style('stroke', dash.colors[0]).attr('stroke-width', 2.5);
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('circle').data(rows).join('circle').attr('cx', (r) => x(r.horizon)).attr('cy', (r) => y(+r.hit)).attr('r', 5).style('fill', dash.colors[0])
+      .on('pointermove', (ev, r) => tip.show(ev, [`By ${r.horizon}`, `${r.hit} fires had hit`])).on('pointerleave', () => tip.hide());
+    svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'val').attr('text-anchor', 'middle').attr('x', (r) => x(r.horizon)).attr('y', (r) => y(+r.hit) - 10).text((r) => r.hit);
+  });
+
+  // ---------- Brier per horizon ----------
+  dash.draw('brier', (el) => {
+    const rows = wr.rows(el, 'test_scores'); if (!rows) return;
+    el.replaceChildren();
+    const data = ['12h', '24h', '48h', '72h'].map((h) => ({ h, row: rows.find((r) => r.metric === 'brier_' + h) })).filter((d) => d.row);
+    const W = Math.max(el.clientWidth, 280), H = 220, m = { t: 22, r: 10, b: 30, l: 40 };
+    const svg = wr.svg(el, H, 'Columns of Brier error at 12, 24, 48 and 72 hours; highest at 12 hours.');
+    const x = d3.scaleBand().domain(data.map((d) => d.h)).range([m.l, W - m.r]).padding(0.35);
+    const y = d3.scaleLinear().domain([0, d3.max(data, (d) => +d.row.value) * 1.15 || 0.1]).nice().range([H - m.b, m.t]);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickFormat((d) => d.replace('h', ' h')));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(d3.format('.2f')));
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('rect').data(data).join('rect').attr('x', (d) => x(d.h)).attr('width', x.bandwidth())
+      .attr('y', (d) => y(+d.row.value)).attr('height', (d) => Math.max(1, y(0) - y(+d.row.value)))
+      .style('fill', (d) => (d.h === '12h' || d.h === '24h' ? dash.colors[0] : 'var(--cds-chart-muted)'))
+      .on('pointermove', (ev, d) => tip.show(ev, [`${d.h.replace('h', ' h')} horizon`, `Brier ${(+d.row.value).toFixed(4)}`])).on('pointerleave', () => tip.hide());
+    svg.append('g').selectAll('text').data(data).join('text').attr('class', 'val').attr('text-anchor', 'middle')
+      .attr('x', (d) => x(d.h) + x.bandwidth() / 2).attr('y', (d) => y(+d.row.value) - 5).text((d) => (+d.row.value).toFixed(3));
+  });
+
+  // ---------- Models: dot plot on a zoomed scale ----------
+  dash.draw('models', (el) => {
+    const rows = wr.rows(el, 'model_cv'); if (!rows) return;
+    el.replaceChildren();
+    const data = rows.slice().sort((a, b) => +b.hybrid - +a.hybrid);
+    const W = Math.max(el.clientWidth, 280), H = 220, m = { t: 6, r: 44, b: 30, l: 0 };
+    const svg = wr.svg(el, H, 'Dot plot of cross-validated Hybrid score per model; tuned Random Forest is highest, the baseline far lower.');
+    m.l = wr.labelWidth(svg, data.map((r) => r.model)) + 12;
+    const lo = Math.floor((d3.min(data, (r) => +r.hybrid) - 0.03) * 20) / 20;
+    const x = d3.scaleLinear().domain([lo, 1]).range([m.l, W - m.r]);
+    const y = d3.scaleBand().domain(data.map((r) => r.model)).range([m.t, H - m.b]).padding(0.4);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(4).tickSize(-(H - m.b - m.t)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(W < 420 ? 3 : 5).tickFormat(d3.format('.2f')));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).tickSize(0)).call((g) => g.select('.domain').remove());
+    const tip = wr.tip(el);
+    const g = svg.append('g').selectAll('g').data(data).join('g');
+    g.append('line').attr('x1', x(lo)).attr('x2', (r) => x(+r.hybrid)).attr('y1', (r) => y(r.model) + y.bandwidth() / 2).attr('y2', (r) => y(r.model) + y.bandwidth() / 2).style('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 2);
+    g.append('circle').attr('cx', (r) => x(+r.hybrid)).attr('cy', (r) => y(r.model) + y.bandwidth() / 2).attr('r', 6)
+      .style('fill', (r) => (r.model === 'Random Forest (tuned)' ? dash.colors[0] : 'var(--cds-chart-muted)'))
+      .on('pointermove', (ev, r) => tip.show(ev, [r.model, `Hybrid score ${(+r.hybrid).toFixed(3)}`])).on('pointerleave', () => tip.hide());
+    g.append('text').attr('class', 'val').attr('x', (r) => x(+r.hybrid) + 10).attr('y', (r) => y(r.model) + y.bandwidth() / 2).attr('dy', '0.35em').text((r) => (+r.hybrid).toFixed(3));
+  });
+
+  // ---------- Calibration ----------
+  dash.draw('calibration', (el) => {
+    const rows = wr.rows(el, 'calibration'); if (!rows) return;
+    el.replaceChildren();
+    const W = Math.max(el.clientWidth, 280), H = 260, m = { t: 24, r: 14, b: 30, l: 40 };
+    const svg = wr.svg(el, H, 'Calibration chart: predicted risk against real hit rate for 12, 24 and 48 hours, close to the diagonal.');
+    const x = d3.scaleLinear().domain([0, 100]).range([m.l, W - m.r]);
+    const y = d3.scaleLinear().domain([0, 100]).range([H - m.b, m.t]);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(5).tickFormat((d) => d + '%'));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat((d) => d + '%'));
+    svg.append('line').attr('x1', x(0)).attr('y1', y(0)).attr('x2', x(100)).attr('y2', y(100)).style('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+    const tip = wr.tip(el);
+    d3.groups(rows, (r) => r.horizon).forEach(([h, pts], i) => {
+      const c = dash.colors[i % dash.colors.length];
+      svg.append('path').datum(pts).attr('d', d3.line().x((r) => x(+r.predicted_pct)).y((r) => y(+r.real_pct))).style('fill', 'none').style('stroke', c).attr('stroke-width', 2);
+      svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (r) => x(+r.predicted_pct)).attr('cy', (r) => y(+r.real_pct)).attr('r', 4.5).style('fill', c)
+        .on('pointermove', (ev, r) => tip.show(ev, [`${h} horizon`, `Predicted ${(+r.predicted_pct).toFixed(1)}%`, `Really hit ${(+r.real_pct).toFixed(1)}%`])).on('pointerleave', () => tip.hide());
+      const lg = svg.append('g').attr('transform', `translate(${m.l + i * 60},10)`);
+      lg.append('circle').attr('r', 5).attr('cx', 5).attr('cy', -4).style('fill', c);
+      lg.append('text').attr('x', 14).text(h);
+    });
+  });
+
+  // ---------- Importance ----------
+  dash.draw('importance', (el) => {
+    const rows = wr.rows(el, 'importance'); if (!rows) return;
+    el.replaceChildren();
+    const data = rows.slice().sort((a, b) => +b.importance - +a.importance);
+    const W = Math.max(el.clientWidth, 280), H = 200, m = { t: 6, r: 48, b: 28, l: 0 };
+    const svg = wr.svg(el, H, 'Bar chart of feature importance; distance to the evacuation zone dominates.');
+    m.l = wr.labelWidth(svg, data.map((r) => r.feature)) + 10;
+    const x = d3.scaleLinear().domain([0, d3.max(data, (r) => +r.importance) || 1]).nice().range([m.l, W - m.r]);
+    const y = d3.scaleBand().domain(data.map((r) => r.feature)).range([m.t, H - m.b]).padding(0.3);
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(W < 420 ? 2 : 4));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).tickSize(0)).call((g) => g.select('.domain').remove());
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('rect').data(data).join('rect').attr('x', x(0)).attr('y', (r) => y(r.feature)).attr('height', y.bandwidth())
+      .attr('width', (r) => Math.max(1, x(+r.importance) - x(0))).style('fill', (r, i) => (i === 0 ? dash.colors[0] : 'var(--cds-chart-muted)'))
+      .on('pointermove', (ev, r) => tip.show(ev, [r.feature, `Score drop ${(+r.importance).toFixed(4)}`])).on('pointerleave', () => tip.hide());
+    svg.append('g').selectAll('text').data(data).join('text').attr('class', 'val').attr('x', (r) => x(+r.importance) + 4).attr('y', (r) => y(r.feature) + y.bandwidth() / 2).attr('dy', '0.35em').text((r) => (+r.importance).toFixed(3));
+  });
+
+  // ---------- Forecast table ----------
+  dash.draw('fire-table', (tb) => {
+    const d = dash.data('new_fires');
+    if (d.status !== 'ok') { tb.replaceChildren(); return; }
+    const rows = d.data.filter((r) => !wr.band || r.band === wr.band).sort((a, b) => +b.risk_48h - +a.risk_48h || +a.distance_km - +b.distance_km);
+    tb.replaceChildren(...rows.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = encodeURIComponent(r.event_id);
+      [r.event_id, (+r.distance_km).toFixed(1), (+r.risk_12h).toFixed(1), (+r.risk_24h).toFixed(1)].forEach((v) => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      const td48 = document.createElement('td');
+      const num = document.createElement('span'); num.textContent = (+r.risk_48h).toFixed(1);
+      const meter = document.createElement('span'); meter.className = 'meter'; meter.setAttribute('aria-hidden', 'true');
+      const fill = document.createElement('i'); fill.style.width = Math.max(0, Math.min(100, +r.risk_48h)) + '%'; meter.appendChild(fill);
+      td48.append(num, meter); tr.appendChild(td48);
+      const tdb = document.createElement('td'); const s = document.createElement('span'); s.className = 'pill ' + r.band; s.textContent = r.band; tdb.appendChild(s); tr.appendChild(tdb);
+      return tr;
+    }));
+  });
+</script>
