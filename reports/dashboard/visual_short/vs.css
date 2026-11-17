@@ -1,0 +1,91 @@
+.vs, .vs-stage { container-type: inline-size; }
+.vs-stage { box-sizing: border-box; aspect-ratio: 16 / 9; width: min(100%, calc(var(--room, 70dvh) * 16 / 9)); margin-inline: auto; overflow: clip;
+  background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
+@container (max-width: 800px) { .vs-stage { aspect-ratio: 1; width: min(100%, var(--room, 70dvh)); } }
+@container (max-width: 560px) { .vs-stage { aspect-ratio: 4 / 5; width: min(100%, calc(var(--room, 70dvh) * 4 / 5)); } }
+.vs-in { box-sizing: border-box; height: 100%; padding: 0 3.6cqi 3cqi; display: grid; grid-template-rows: auto minmax(0, 1fr); position: relative; }
+.vs-chapters { display: grid; box-sizing: border-box; isolation: isolate; }
+.vs-in, .vs-chapters, .vs-ch { grid-template-columns: minmax(0, 1fr); }
+.vs-ch, .vs-cap { margin: 0; opacity: 0; transition: opacity 400ms var(--cds-ease-out); }
+.vs-ch.vs-on, .vs-cap.vs-on { opacity: 1; } .vs-ch:not(.vs-on) { pointer-events: none; }
+.vs-ch { grid-area: 1 / 1; display: grid; grid-template-rows: auto auto auto minmax(0, 1fr) auto; }
+.vs-say { grid-row: 3; } .vs-draw { grid-row: 4; } .vs-src { grid-row: 5; }
+.vs-draw { container-type: size; display: flex; flex-direction: column; justify-content: safe center; font-size: max(12px, 1.8cqi); }
+.vs-in { --marks: max(24px, 4cqi); --row: 32px; --ctl: 176px; }
+@media (pointer: coarse) { .vs-in { --marks: max(32px, 4cqi); --row: 52px; --ctl: 240px; } }
+.vs-line { grid-area: 1 / 1; height: var(--marks); display: flex; gap: 6px; }
+.vs-mk { flex: 1; min-inline-size: 0; position: relative; display: flex; align-items: center; padding: 0; border: 0; background: none; cursor: pointer; forced-color-adjust: none; outline-offset: -3px; }
+.vs-mk::before { content: ''; position: absolute; inset-inline: 0; background: var(--cds-chart-muted); }
+.vs-mk i { position: relative; display: block; width: 0; background: var(--color-fg); }
+.vs-mk::before, .vs-mk i { height: 3px; border-radius: 3px; }
+@media (forced-colors: active) { .vs-mk::before { background: GrayText; } .vs-mk i { background: CanvasText; } }
+.vs-chapters, .vs-caps { grid-area: 2 / 1; }
+.vs-caps, .vs-say { font-size: max(14px, 2cqi); line-height: 1.4; }
+.vs-say { block-size: 2lh; } .vs-ch h2 { margin: 0.1em 0 0.3em; }
+.vs-cap { position: absolute; inset-inline: 3.6cqi; display: grid; font-weight: var(--cds-font-weight-medium); }
+.vs-s { grid-area: 1 / 1; opacity: 0; } .vs-s.vs-on { opacity: 1; }
+.vs-caps { pointer-events: none; } .vs-hush .vs-caps { opacity: 0; }
+.vs-label { margin: 0; padding-block: calc((var(--row) - 1lh) / 2); padding-inline-end: var(--ctl); text-transform: uppercase; }
+.vs-controls { position: absolute; inset-block-start: var(--marks); inset-inline-end: calc(3.6cqi - 6px); height: var(--row); display: flex; align-items: center; gap: 8px; }
+.vs-controls { transition: opacity 200ms var(--cds-ease-out); }
+@media (hover: hover) { .vs-playing .vs-stage:is(.vs-idle:not(.vs-held), :not(:hover, .vs-touch)):not(:has(:focus-visible)) .vs-controls { opacity: 0; transition: opacity var(--cds-dur-slow) var(--cds-ease-out) 300ms; } }
+@media (prefers-reduced-motion: reduce) { .vs-controls { transition: none !important; } }
+.vs-controls > button { flex: none; height: calc(100% - 8px); min-inline-size: 24px; padding-inline: 6px; font: inherit; font-size: 13px; color: var(--color-fg); background: none; border: 0; border-radius: 6px; cursor: pointer; }
+@media (hover: hover) { .vs-controls > button:hover { background: var(--cds-border); } .vs-mk:hover::before, .vs-mk:hover i { height: 5px; } }
+.vs-controls > button:has(svg) { display: grid; place-items: center; padding-inline: 4px; }
+.vs-controls svg { grid-area: 1 / 1; inline-size: 16px; block-size: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+@media (pointer: coarse) { .vs-controls > button:has(svg) { min-inline-size: 40px; } .vs-controls svg { inline-size: 20px; block-size: 20px; } }
+.vs-cc[aria-pressed="false"] { color: var(--color-fg-muted); text-decoration: line-through; }
+.vs.vs-playing .vs-toggle > :first-child, .vs:not(.vs-playing) .vs-toggle > :last-child { visibility: hidden; }
+[data-read-sound][aria-pressed="true"] > :first-child, [data-read-sound]:not([aria-pressed="true"]) > :last-child { visibility: hidden; }
+@container (max-width: 560px) { .vs-line { gap: 4px; } .vs-say { block-size: 3lh; } .vs-chapters { padding-top: calc(var(--row) + 4px); } .vs-label { padding: 0; } }
+.vs-now { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---- The piece's own type ---- */
+.vs-label { font-size: max(11px, 1.3cqi); letter-spacing: 0.08em; color: var(--color-fg-muted); }
+.vs-ch h2 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: max(18px, 3.4cqi); line-height: 1.2; text-wrap: balance; }
+.vs-src { margin: 0; padding-top: 0.6em; font-size: max(11px, 1.3cqi); color: var(--color-fg-muted); }
+
+/* ---- Drawings: each fills its .vs-draw box ---- */
+.vs-draw > [data-draw] { flex: 1 1 0; min-height: 0; position: relative; }
+.vs-tip { position: absolute; z-index: 3; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover);
+  border-radius: var(--cds-radius); padding: 4px 8px; font-size: max(11px, 1.2cqi); color: var(--color-fg); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.vs-tip > :first-child { font-weight: var(--cds-font-weight-medium); }
+
+/* Title */
+.t-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1cqh; height: 100%; text-align: center; }
+.t-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: min(40cqh, 18cqi); line-height: 1; font-variant-numeric: tabular-nums; color: var(--color-fg); }
+.t-sub { margin: 0; color: var(--color-fg-muted); font-size: 1em; }
+
+/* 10 by 10 dot grid */
+.dots { display: grid; grid-template-columns: repeat(10, 1fr); gap: 1.4%; width: min(92cqh, 92cqi); aspect-ratio: 1; margin: auto; position: absolute; inset: 0; }
+.dot { border-radius: 50%; background: var(--cds-chart-muted); forced-color-adjust: none; }
+.dot.hit.on { background: var(--acc); }
+@media (forced-colors: active) { .dot { background: GrayText; } .dot.hit.on { background: Highlight; } }
+
+/* Scatter */
+.vs-draw svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.vs-draw svg text { fill: var(--cds-text-secondary); font-size: 0.85em; font-family: var(--font-anthropic-sans); }
+.vs-draw svg .axis path, .vs-draw svg .axis line { stroke: var(--cds-chart-axis); }
+.vs-draw svg .grid line { stroke: var(--cds-chart-grid); }
+.pt { fill: var(--cds-chart-muted); stroke: var(--color-panel); stroke-width: 0.8; }
+.lit .pt.h { fill: var(--acc); }
+.ref line { stroke: var(--cds-chart-reference); stroke-dasharray: 4 4; stroke-width: 1.5; }
+.ref text { fill: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+
+/* Horizontal bars */
+.hb { position: absolute; inset: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 1em; align-content: center; }
+.hb-lab { display: flex; align-items: center; justify-content: flex-end; color: var(--color-fg-muted); white-space: nowrap; }
+.hb-track { display: flex; align-items: center; gap: 0.5em; min-width: 0; }
+.hb-bar { height: 62%; border-radius: 4px; background: var(--cds-chart-muted); transform-origin: left center; forced-color-adjust: none; }
+.hb-bar.acc { background: var(--acc); }
+.hb-val, .vc-val { color: var(--color-fg); font-variant-numeric: tabular-nums; }
+@media (forced-colors: active) { .hb-bar, .vc-bar { background: GrayText; } .hb-bar.acc, .vc-bar.acc { background: Highlight; } }
+
+/* Columns */
+.vc { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; gap: 5cqi; }
+.vc-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: min(14cqi, 20%); }
+.vc-bar { width: 100%; border-radius: 4px 4px 0 0; background: var(--cds-chart-muted); transform-origin: center bottom; forced-color-adjust: none; }
+.vc-bar.acc { background: var(--acc); }
+.vc-val { padding-bottom: 0.3em; }
+.vc-lab { padding-top: 0.4em; color: var(--color-fg-muted); white-space: nowrap; }
