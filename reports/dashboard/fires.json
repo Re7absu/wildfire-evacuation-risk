@@ -1,0 +1,1342 @@
+{
+ "rows": [
+  {
+   "event_id": "10892457",
+   "distance_km": 6.166,
+   "hours": 18.89,
+   "hit": 0
+  },
+  {
+   "event_id": "11757157",
+   "distance_km": 2.931,
+   "hours": 22.05,
+   "hit": 1
+  },
+  {
+   "event_id": "11945086",
+   "distance_km": 3.272,
+   "hours": 0.89,
+   "hit": 1
+  },
+  {
+   "event_id": "12044083",
+   "distance_km": 64.12,
+   "hours": 60.95,
+   "hit": 0
+  },
+  {
+   "event_id": "12052347",
+   "distance_km": 18.005,
+   "hours": 44.99,
+   "hit": 0
+  },
+  {
+   "event_id": "12773599",
+   "distance_km": 35.233,
+   "hours": 44.03,
+   "hit": 0
+  },
+  {
+   "event_id": "13122360",
+   "distance_km": 3.53,
+   "hours": 14.85,
+   "hit": 1
+  },
+  {
+   "event_id": "13745272",
+   "distance_km": 8.039,
+   "hours": 66.77,
+   "hit": 0
+  },
+  {
+   "event_id": "15247236",
+   "distance_km": 31.759,
+   "hours": 39.91,
+   "hit": 0
+  },
+  {
+   "event_id": "15743535",
+   "distance_km": 1.995,
+   "hours": 54.64,
+   "hit": 1
+  },
+  {
+   "event_id": "15846088",
+   "distance_km": 260.305,
+   "hours": 66.64,
+   "hit": 0
+  },
+  {
+   "event_id": "16870867",
+   "distance_km": 2.703,
+   "hours": 15.92,
+   "hit": 1
+  },
+  {
+   "event_id": "17127751",
+   "distance_km": 4.262,
+   "hours": 10.91,
+   "hit": 1
+  },
+  {
+   "event_id": "17735080",
+   "distance_km": 482.692,
+   "hours": 18.28,
+   "hit": 0
+  },
+  {
+   "event_id": "17888481",
+   "distance_km": 300.641,
+   "hours": 55.46,
+   "hit": 0
+  },
+  {
+   "event_id": "18032557",
+   "distance_km": 54.957,
+   "hours": 64.57,
+   "hit": 0
+  },
+  {
+   "event_id": "18104294",
+   "distance_km": 1.743,
+   "hours": 23.84,
+   "hit": 1
+  },
+  {
+   "event_id": "18150961",
+   "distance_km": 2.965,
+   "hours": 3.53,
+   "hit": 1
+  },
+  {
+   "event_id": "18292206",
+   "distance_km": 1.135,
+   "hours": 5.82,
+   "hit": 1
+  },
+  {
+   "event_id": "18475932",
+   "distance_km": 495.662,
+   "hours": 66.43,
+   "hit": 0
+  },
+  {
+   "event_id": "18522515",
+   "distance_km": 7.224,
+   "hours": 37.39,
+   "hit": 0
+  },
+  {
+   "event_id": "18675176",
+   "distance_km": 34.606,
+   "hours": 24.17,
+   "hit": 0
+  },
+  {
+   "event_id": "19306260",
+   "distance_km": 45.739,
+   "hours": 66.44,
+   "hit": 0
+  },
+  {
+   "event_id": "19552816",
+   "distance_km": 754.124,
+   "hours": 61.27,
+   "hit": 0
+  },
+  {
+   "event_id": "19771815",
+   "distance_km": 2.617,
+   "hours": 0.52,
+   "hit": 1
+  },
+  {
+   "event_id": "20307683",
+   "distance_km": 756.438,
+   "hours": 57.64,
+   "hit": 0
+  },
+  {
+   "event_id": "20620516",
+   "distance_km": 1.784,
+   "hours": 1.4,
+   "hit": 1
+  },
+  {
+   "event_id": "20698681",
+   "distance_km": 2.685,
+   "hours": 2.56,
+   "hit": 1
+  },
+  {
+   "event_id": "21481903",
+   "distance_km": 123.439,
+   "hours": 62.82,
+   "hit": 0
+  },
+  {
+   "event_id": "21530188",
+   "distance_km": 168.375,
+   "hours": 48.93,
+   "hit": 0
+  },
+  {
+   "event_id": "21692904",
+   "distance_km": 2.43,
+   "hours": 0.58,
+   "hit": 1
+  },
+  {
+   "event_id": "22577693",
+   "distance_km": 1.316,
+   "hours": 5.46,
+   "hit": 1
+  },
+  {
+   "event_id": "22620173",
+   "distance_km": 2.035,
+   "hours": 37.62,
+   "hit": 1
+  },
+  {
+   "event_id": "22622416",
+   "distance_km": 281.07,
+   "hours": 66.27,
+   "hit": 0
+  },
+  {
+   "event_id": "23007167",
+   "distance_km": 73.004,
+   "hours": 63.72,
+   "hit": 0
+  },
+  {
+   "event_id": "23708068",
+   "distance_km": 125.95,
+   "hours": 18.8,
+   "hit": 0
+  },
+  {
+   "event_id": "23886014",
+   "distance_km": 3.223,
+   "hours": 3.21,
+   "hit": 1
+  },
+  {
+   "event_id": "24491699",
+   "distance_km": 2.583,
+   "hours": 14.73,
+   "hit": 1
+  },
+  {
+   "event_id": "24514437",
+   "distance_km": 299.438,
+   "hours": 66.4,
+   "hit": 0
+  },
+  {
+   "event_id": "24870571",
+   "distance_km": 40.012,
+   "hours": 65.69,
+   "hit": 0
+  },
+  {
+   "event_id": "24959246",
+   "distance_km": 255.529,
+   "hours": 66.45,
+   "hit": 0
+  },
+  {
+   "event_id": "25027537",
+   "distance_km": 15.398,
+   "hours": 11.25,
+   "hit": 0
+  },
+  {
+   "event_id": "25766655",
+   "distance_km": 2.622,
+   "hours": 1.48,
+   "hit": 1
+  },
+  {
+   "event_id": "25909534",
+   "distance_km": 4.496,
+   "hours": 1.99,
+   "hit": 1
+  },
+  {
+   "event_id": "26151072",
+   "distance_km": 2.833,
+   "hours": 4.44,
+   "hit": 1
+  },
+  {
+   "event_id": "26429413",
+   "distance_km": 23.677,
+   "hours": 12.82,
+   "hit": 0
+  },
+  {
+   "event_id": "26940253",
+   "distance_km": 210.184,
+   "hours": 59.77,
+   "hit": 0
+  },
+  {
+   "event_id": "27517432",
+   "distance_km": 2.117,
+   "hours": 1.58,
+   "hit": 1
+  },
+  {
+   "event_id": "27991695",
+   "distance_km": 67.099,
+   "hours": 60.31,
+   "hit": 0
+  },
+  {
+   "event_id": "28132196",
+   "distance_km": 263.599,
+   "hours": 61.48,
+   "hit": 0
+  },
+  {
+   "event_id": "28212683",
+   "distance_km": 390.952,
+   "hours": 48.0,
+   "hit": 0
+  },
+  {
+   "event_id": "30421787",
+   "distance_km": 254.943,
+   "hours": 65.08,
+   "hit": 0
+  },
+  {
+   "event_id": "31054513",
+   "distance_km": 261.139,
+   "hours": 66.3,
+   "hit": 0
+  },
+  {
+   "event_id": "31560147",
+   "distance_km": 1.883,
+   "hours": 13.66,
+   "hit": 1
+  },
+  {
+   "event_id": "31948591",
+   "distance_km": 99.978,
+   "hours": 21.07,
+   "hit": 0
+  },
+  {
+   "event_id": "32093256",
+   "distance_km": 72.615,
+   "hours": 66.13,
+   "hit": 0
+  },
+  {
+   "event_id": "33502571",
+   "distance_km": 124.717,
+   "hours": 61.8,
+   "hit": 0
+  },
+  {
+   "event_id": "33928266",
+   "distance_km": 2.671,
+   "hours": 14.47,
+   "hit": 1
+  },
+  {
+   "event_id": "34027802",
+   "distance_km": 139.178,
+   "hours": 62.86,
+   "hit": 0
+  },
+  {
+   "event_id": "34501712",
+   "distance_km": 21.807,
+   "hours": 39.96,
+   "hit": 0
+  },
+  {
+   "event_id": "34889301",
+   "distance_km": 1.187,
+   "hours": 0.06,
+   "hit": 1
+  },
+  {
+   "event_id": "34908295",
+   "distance_km": 476.87,
+   "hours": 63.96,
+   "hit": 0
+  },
+  {
+   "event_id": "34940889",
+   "distance_km": 2.009,
+   "hours": 0.0,
+   "hit": 1
+  },
+  {
+   "event_id": "35324503",
+   "distance_km": 61.571,
+   "hours": 65.58,
+   "hit": 0
+  },
+  {
+   "event_id": "35610300",
+   "distance_km": 219.692,
+   "hours": 66.05,
+   "hit": 0
+  },
+  {
+   "event_id": "35949465",
+   "distance_km": 282.251,
+   "hours": 64.62,
+   "hit": 0
+  },
+  {
+   "event_id": "36527758",
+   "distance_km": 13.898,
+   "hours": 15.95,
+   "hit": 0
+  },
+  {
+   "event_id": "36999334",
+   "distance_km": 8.725,
+   "hours": 61.07,
+   "hit": 0
+  },
+  {
+   "event_id": "37136049",
+   "distance_km": 149.724,
+   "hours": 66.03,
+   "hit": 0
+  },
+  {
+   "event_id": "37780023",
+   "distance_km": 94.773,
+   "hours": 66.2,
+   "hit": 0
+  },
+  {
+   "event_id": "38112926",
+   "distance_km": 260.354,
+   "hours": 65.02,
+   "hit": 0
+  },
+  {
+   "event_id": "38412292",
+   "distance_km": 55.358,
+   "hours": 66.57,
+   "hit": 0
+  },
+  {
+   "event_id": "38909367",
+   "distance_km": 68.907,
+   "hours": 1.29,
+   "hit": 0
+  },
+  {
+   "event_id": "39324200",
+   "distance_km": 430.518,
+   "hours": 49.55,
+   "hit": 0
+  },
+  {
+   "event_id": "39687487",
+   "distance_km": 2.654,
+   "hours": 0.74,
+   "hit": 1
+  },
+  {
+   "event_id": "39841201",
+   "distance_km": 167.003,
+   "hours": 66.01,
+   "hit": 0
+  },
+  {
+   "event_id": "40086180",
+   "distance_km": 6.468,
+   "hours": 28.61,
+   "hit": 0
+  },
+  {
+   "event_id": "40504901",
+   "distance_km": 539.571,
+   "hours": 66.97,
+   "hit": 0
+  },
+  {
+   "event_id": "41218264",
+   "distance_km": 5.451,
+   "hours": 18.81,
+   "hit": 0
+  },
+  {
+   "event_id": "41274865",
+   "distance_km": 597.083,
+   "hours": 54.55,
+   "hit": 0
+  },
+  {
+   "event_id": "42563089",
+   "distance_km": 86.441,
+   "hours": 39.92,
+   "hit": 0
+  },
+  {
+   "event_id": "42731036",
+   "distance_km": 2.284,
+   "hours": 66.92,
+   "hit": 1
+  },
+  {
+   "event_id": "42751447",
+   "distance_km": 172.781,
+   "hours": 65.62,
+   "hit": 0
+  },
+  {
+   "event_id": "44291860",
+   "distance_km": 22.067,
+   "hours": 64.5,
+   "hit": 0
+  },
+  {
+   "event_id": "46217176",
+   "distance_km": 21.106,
+   "hours": 66.49,
+   "hit": 0
+  },
+  {
+   "event_id": "46826716",
+   "distance_km": 1.068,
+   "hours": 0.13,
+   "hit": 1
+  },
+  {
+   "event_id": "46976428",
+   "distance_km": 131.902,
+   "hours": 65.2,
+   "hit": 0
+  },
+  {
+   "event_id": "47422636",
+   "distance_km": 126.187,
+   "hours": 58.53,
+   "hit": 0
+  },
+  {
+   "event_id": "47616223",
+   "distance_km": 85.785,
+   "hours": 66.19,
+   "hit": 0
+  },
+  {
+   "event_id": "47633923",
+   "distance_km": 2.784,
+   "hours": 3.21,
+   "hit": 1
+  },
+  {
+   "event_id": "48888338",
+   "distance_km": 32.619,
+   "hours": 42.31,
+   "hit": 0
+  },
+  {
+   "event_id": "48971236",
+   "distance_km": 64.859,
+   "hours": 63.75,
+   "hit": 0
+  },
+  {
+   "event_id": "49088441",
+   "distance_km": 32.487,
+   "hours": 19.16,
+   "hit": 0
+  },
+  {
+   "event_id": "49304487",
+   "distance_km": 579.342,
+   "hours": 17.64,
+   "hit": 0
+  },
+  {
+   "event_id": "49343570",
+   "distance_km": 6.344,
+   "hours": 26.53,
+   "hit": 0
+  },
+  {
+   "event_id": "49498922",
+   "distance_km": 163.284,
+   "hours": 64.44,
+   "hit": 0
+  },
+  {
+   "event_id": "49705111",
+   "distance_km": 44.414,
+   "hours": 55.82,
+   "hit": 0
+  },
+  {
+   "event_id": "49907151",
+   "distance_km": 2.431,
+   "hours": 0.51,
+   "hit": 1
+  },
+  {
+   "event_id": "50111753",
+   "distance_km": 14.753,
+   "hours": 66.86,
+   "hit": 0
+  },
+  {
+   "event_id": "50154005",
+   "distance_km": 316.361,
+   "hours": 64.56,
+   "hit": 0
+  },
+  {
+   "event_id": "50232090",
+   "distance_km": 757.7,
+   "hours": 19.21,
+   "hit": 0
+  },
+  {
+   "event_id": "50442487",
+   "distance_km": 81.883,
+   "hours": 14.67,
+   "hit": 0
+  },
+  {
+   "event_id": "50534601",
+   "distance_km": 452.829,
+   "hours": 14.98,
+   "hit": 0
+  },
+  {
+   "event_id": "51019821",
+   "distance_km": 5.965,
+   "hours": 61.37,
+   "hit": 0
+  },
+  {
+   "event_id": "51167521",
+   "distance_km": 174.24,
+   "hours": 64.07,
+   "hit": 0
+  },
+  {
+   "event_id": "51302326",
+   "distance_km": 1.331,
+   "hours": 8.17,
+   "hit": 1
+  },
+  {
+   "event_id": "51568885",
+   "distance_km": 203.027,
+   "hours": 66.99,
+   "hit": 0
+  },
+  {
+   "event_id": "51688491",
+   "distance_km": 7.469,
+   "hours": 64.32,
+   "hit": 0
+  },
+  {
+   "event_id": "52259907",
+   "distance_km": 2.297,
+   "hours": 43.85,
+   "hit": 1
+  },
+  {
+   "event_id": "52398567",
+   "distance_km": 9.39,
+   "hours": 32.81,
+   "hit": 0
+  },
+  {
+   "event_id": "52440944",
+   "distance_km": 311.445,
+   "hours": 62.53,
+   "hit": 0
+  },
+  {
+   "event_id": "52813329",
+   "distance_km": 2.091,
+   "hours": 2.66,
+   "hit": 1
+  },
+  {
+   "event_id": "54163612",
+   "distance_km": 131.874,
+   "hours": 66.73,
+   "hit": 0
+  },
+  {
+   "event_id": "54555851",
+   "distance_km": 3.347,
+   "hours": 3.79,
+   "hit": 1
+  },
+  {
+   "event_id": "54606261",
+   "distance_km": 2.511,
+   "hours": 7.61,
+   "hit": 1
+  },
+  {
+   "event_id": "55031524",
+   "distance_km": 4.164,
+   "hours": 5.47,
+   "hit": 1
+  },
+  {
+   "event_id": "55093960",
+   "distance_km": 28.058,
+   "hours": 47.0,
+   "hit": 0
+  },
+  {
+   "event_id": "55451314",
+   "distance_km": 1.524,
+   "hours": 4.46,
+   "hit": 1
+  },
+  {
+   "event_id": "56190238",
+   "distance_km": 1.276,
+   "hours": 0.55,
+   "hit": 1
+  },
+  {
+   "event_id": "56860504",
+   "distance_km": 371.683,
+   "hours": 65.37,
+   "hit": 0
+  },
+  {
+   "event_id": "57382947",
+   "distance_km": 288.44,
+   "hours": 36.17,
+   "hit": 0
+  },
+  {
+   "event_id": "59050390",
+   "distance_km": 104.63,
+   "hours": 39.27,
+   "hit": 0
+  },
+  {
+   "event_id": "59088464",
+   "distance_km": 61.156,
+   "hours": 59.22,
+   "hit": 0
+  },
+  {
+   "event_id": "59822043",
+   "distance_km": 51.12,
+   "hours": 64.18,
+   "hit": 0
+  },
+  {
+   "event_id": "59863246",
+   "distance_km": 5.216,
+   "hours": 57.09,
+   "hit": 0
+  },
+  {
+   "event_id": "59912474",
+   "distance_km": 0.657,
+   "hours": 13.11,
+   "hit": 1
+  },
+  {
+   "event_id": "60008113",
+   "distance_km": 498.519,
+   "hours": 60.07,
+   "hit": 0
+  },
+  {
+   "event_id": "60132804",
+   "distance_km": 2.799,
+   "hours": 1.26,
+   "hit": 1
+  },
+  {
+   "event_id": "60328541",
+   "distance_km": 218.084,
+   "hours": 65.72,
+   "hit": 0
+  },
+  {
+   "event_id": "60871141",
+   "distance_km": 0.869,
+   "hours": 0.41,
+   "hit": 1
+  },
+  {
+   "event_id": "60883493",
+   "distance_km": 5.405,
+   "hours": 60.73,
+   "hit": 0
+  },
+  {
+   "event_id": "61186593",
+   "distance_km": 200.229,
+   "hours": 63.89,
+   "hit": 0
+  },
+  {
+   "event_id": "61455506",
+   "distance_km": 152.445,
+   "hours": 66.64,
+   "hit": 0
+  },
+  {
+   "event_id": "62295471",
+   "distance_km": 3.045,
+   "hours": 0.13,
+   "hit": 1
+  },
+  {
+   "event_id": "62568772",
+   "distance_km": 1.815,
+   "hours": 0.38,
+   "hit": 1
+  },
+  {
+   "event_id": "62887976",
+   "distance_km": 2.113,
+   "hours": 3.32,
+   "hit": 1
+  },
+  {
+   "event_id": "63182365",
+   "distance_km": 2.942,
+   "hours": 45.34,
+   "hit": 1
+  },
+  {
+   "event_id": "64255332",
+   "distance_km": 158.866,
+   "hours": 33.39,
+   "hit": 0
+  },
+  {
+   "event_id": "64647602",
+   "distance_km": 275.809,
+   "hours": 65.25,
+   "hit": 0
+  },
+  {
+   "event_id": "65120642",
+   "distance_km": 131.497,
+   "hours": 2.48,
+   "hit": 0
+  },
+  {
+   "event_id": "66457746",
+   "distance_km": 572.546,
+   "hours": 34.53,
+   "hit": 0
+  },
+  {
+   "event_id": "66587029",
+   "distance_km": 83.352,
+   "hours": 26.39,
+   "hit": 0
+  },
+  {
+   "event_id": "66678641",
+   "distance_km": 2.634,
+   "hours": 7.49,
+   "hit": 1
+  },
+  {
+   "event_id": "66725353",
+   "distance_km": 1.458,
+   "hours": 55.17,
+   "hit": 1
+  },
+  {
+   "event_id": "67308425",
+   "distance_km": 2.578,
+   "hours": 3.36,
+   "hit": 1
+  },
+  {
+   "event_id": "67947674",
+   "distance_km": 5.849,
+   "hours": 9.4,
+   "hit": 0
+  },
+  {
+   "event_id": "68486145",
+   "distance_km": 136.031,
+   "hours": 62.33,
+   "hit": 0
+  },
+  {
+   "event_id": "68898469",
+   "distance_km": 5.907,
+   "hours": 63.56,
+   "hit": 0
+  },
+  {
+   "event_id": "68911231",
+   "distance_km": 0.495,
+   "hours": 0.87,
+   "hit": 1
+  },
+  {
+   "event_id": "69453871",
+   "distance_km": 2.504,
+   "hours": 0.51,
+   "hit": 1
+  },
+  {
+   "event_id": "69696766",
+   "distance_km": 13.841,
+   "hours": 20.46,
+   "hit": 0
+  },
+  {
+   "event_id": "69788114",
+   "distance_km": 2.187,
+   "hours": 20.87,
+   "hit": 1
+  },
+  {
+   "event_id": "69938994",
+   "distance_km": 1.373,
+   "hours": 3.67,
+   "hit": 1
+  },
+  {
+   "event_id": "70156135",
+   "distance_km": 412.695,
+   "hours": 18.92,
+   "hit": 0
+  },
+  {
+   "event_id": "70401139",
+   "distance_km": 0.645,
+   "hours": 1.94,
+   "hit": 1
+  },
+  {
+   "event_id": "71012530",
+   "distance_km": 312.721,
+   "hours": 12.24,
+   "hit": 0
+  },
+  {
+   "event_id": "71424445",
+   "distance_km": 3.176,
+   "hours": 1.47,
+   "hit": 1
+  },
+  {
+   "event_id": "71782873",
+   "distance_km": 194.325,
+   "hours": 55.07,
+   "hit": 0
+  },
+  {
+   "event_id": "72668739",
+   "distance_km": 11.948,
+   "hours": 36.96,
+   "hit": 0
+  },
+  {
+   "event_id": "72709271",
+   "distance_km": 14.844,
+   "hours": 64.45,
+   "hit": 0
+  },
+  {
+   "event_id": "72762907",
+   "distance_km": 31.059,
+   "hours": 43.82,
+   "hit": 0
+  },
+  {
+   "event_id": "73046875",
+   "distance_km": 8.267,
+   "hours": 66.6,
+   "hit": 0
+  },
+  {
+   "event_id": "73362817",
+   "distance_km": 1.465,
+   "hours": 19.56,
+   "hit": 1
+  },
+  {
+   "event_id": "73464738",
+   "distance_km": 295.595,
+   "hours": 65.7,
+   "hit": 0
+  },
+  {
+   "event_id": "74520040",
+   "distance_km": 27.514,
+   "hours": 63.38,
+   "hit": 0
+  },
+  {
+   "event_id": "74572738",
+   "distance_km": 488.007,
+   "hours": 32.57,
+   "hit": 0
+  },
+  {
+   "event_id": "75429514",
+   "distance_km": 42.221,
+   "hours": 65.33,
+   "hit": 0
+  },
+  {
+   "event_id": "76217490",
+   "distance_km": 8.293,
+   "hours": 62.42,
+   "hit": 0
+  },
+  {
+   "event_id": "76322687",
+   "distance_km": 617.975,
+   "hours": 64.78,
+   "hit": 0
+  },
+  {
+   "event_id": "76903640",
+   "distance_km": 212.682,
+   "hours": 62.71,
+   "hit": 0
+  },
+  {
+   "event_id": "77028404",
+   "distance_km": 0.307,
+   "hours": 2.98,
+   "hit": 1
+  },
+  {
+   "event_id": "78390748",
+   "distance_km": 98.828,
+   "hours": 38.53,
+   "hit": 0
+  },
+  {
+   "event_id": "78849751",
+   "distance_km": 318.819,
+   "hours": 25.42,
+   "hit": 0
+  },
+  {
+   "event_id": "79439605",
+   "distance_km": 10.266,
+   "hours": 38.44,
+   "hit": 0
+  },
+  {
+   "event_id": "79655801",
+   "distance_km": 251.41,
+   "hours": 62.77,
+   "hit": 0
+  },
+  {
+   "event_id": "80054307",
+   "distance_km": 178.448,
+   "hours": 58.94,
+   "hit": 0
+  },
+  {
+   "event_id": "80087496",
+   "distance_km": 186.96,
+   "hours": 66.79,
+   "hit": 0
+  },
+  {
+   "event_id": "80232624",
+   "distance_km": 330.903,
+   "hours": 20.96,
+   "hit": 0
+  },
+  {
+   "event_id": "80265452",
+   "distance_km": 7.893,
+   "hours": 62.89,
+   "hit": 0
+  },
+  {
+   "event_id": "80340843",
+   "distance_km": 520.347,
+   "hours": 15.7,
+   "hit": 0
+  },
+  {
+   "event_id": "80550714",
+   "distance_km": 0.563,
+   "hours": 3.27,
+   "hit": 1
+  },
+  {
+   "event_id": "80745551",
+   "distance_km": 97.022,
+   "hours": 62.84,
+   "hit": 0
+  },
+  {
+   "event_id": "80823027",
+   "distance_km": 121.375,
+   "hours": 38.64,
+   "hit": 0
+  },
+  {
+   "event_id": "81413445",
+   "distance_km": 402.42,
+   "hours": 0.37,
+   "hit": 0
+  },
+  {
+   "event_id": "81541989",
+   "distance_km": 31.135,
+   "hours": 65.7,
+   "hit": 0
+  },
+  {
+   "event_id": "82428611",
+   "distance_km": 143.6,
+   "hours": 64.58,
+   "hit": 0
+  },
+  {
+   "event_id": "82440747",
+   "distance_km": 5.719,
+   "hours": 15.15,
+   "hit": 0
+  },
+  {
+   "event_id": "82683747",
+   "distance_km": 337.738,
+   "hours": 50.52,
+   "hit": 0
+  },
+  {
+   "event_id": "83950561",
+   "distance_km": 1.181,
+   "hours": 14.32,
+   "hit": 1
+  },
+  {
+   "event_id": "84048308",
+   "distance_km": 496.409,
+   "hours": 58.41,
+   "hit": 0
+  },
+  {
+   "event_id": "84366259",
+   "distance_km": 4.186,
+   "hours": 0.54,
+   "hit": 1
+  },
+  {
+   "event_id": "84486575",
+   "distance_km": 363.654,
+   "hours": 43.36,
+   "hit": 0
+  },
+  {
+   "event_id": "84940844",
+   "distance_km": 0.816,
+   "hours": 0.29,
+   "hit": 1
+  },
+  {
+   "event_id": "84946127",
+   "distance_km": 2.576,
+   "hours": 0.72,
+   "hit": 1
+  },
+  {
+   "event_id": "85577091",
+   "distance_km": 52.204,
+   "hours": 63.94,
+   "hit": 0
+  },
+  {
+   "event_id": "85752079",
+   "distance_km": 1.986,
+   "hours": 2.06,
+   "hit": 1
+  },
+  {
+   "event_id": "86479991",
+   "distance_km": 24.292,
+   "hours": 66.66,
+   "hit": 0
+  },
+  {
+   "event_id": "86806129",
+   "distance_km": 1.95,
+   "hours": 21.53,
+   "hit": 1
+  },
+  {
+   "event_id": "86957035",
+   "distance_km": 2.472,
+   "hours": 0.01,
+   "hit": 1
+  },
+  {
+   "event_id": "87010233",
+   "distance_km": 8.718,
+   "hours": 55.57,
+   "hit": 0
+  },
+  {
+   "event_id": "87095211",
+   "distance_km": 580.998,
+   "hours": 37.02,
+   "hit": 0
+  },
+  {
+   "event_id": "90380661",
+   "distance_km": 158.184,
+   "hours": 46.53,
+   "hit": 0
+  },
+  {
+   "event_id": "90654456",
+   "distance_km": 164.451,
+   "hours": 56.88,
+   "hit": 0
+  },
+  {
+   "event_id": "90827686",
+   "distance_km": 286.02,
+   "hours": 65.68,
+   "hit": 0
+  },
+  {
+   "event_id": "91055825",
+   "distance_km": 219.317,
+   "hours": 62.99,
+   "hit": 0
+  },
+  {
+   "event_id": "91497993",
+   "distance_km": 20.264,
+   "hours": 61.31,
+   "hit": 0
+  },
+  {
+   "event_id": "91772155",
+   "distance_km": 360.854,
+   "hours": 66.5,
+   "hit": 0
+  },
+  {
+   "event_id": "92588540",
+   "distance_km": 2.445,
+   "hours": 3.71,
+   "hit": 1
+  },
+  {
+   "event_id": "93260759",
+   "distance_km": 15.879,
+   "hours": 62.84,
+   "hit": 0
+  },
+  {
+   "event_id": "93408578",
+   "distance_km": 1.149,
+   "hours": 14.84,
+   "hit": 1
+  },
+  {
+   "event_id": "94404349",
+   "distance_km": 3.328,
+   "hours": 11.83,
+   "hit": 1
+  },
+  {
+   "event_id": "94424495",
+   "distance_km": 7.509,
+   "hours": 18.71,
+   "hit": 0
+  },
+  {
+   "event_id": "94488511",
+   "distance_km": 209.574,
+   "hours": 64.78,
+   "hit": 0
+  },
+  {
+   "event_id": "95839532",
+   "distance_km": 5.639,
+   "hours": 66.09,
+   "hit": 0
+  },
+  {
+   "event_id": "96270286",
+   "distance_km": 196.117,
+   "hours": 65.01,
+   "hit": 0
+  },
+  {
+   "event_id": "96372213",
+   "distance_km": 325.977,
+   "hours": 43.11,
+   "hit": 0
+  },
+  {
+   "event_id": "97075632",
+   "distance_km": 280.232,
+   "hours": 66.34,
+   "hit": 0
+  },
+  {
+   "event_id": "97362560",
+   "distance_km": 4.545,
+   "hours": 5.69,
+   "hit": 1
+  },
+  {
+   "event_id": "97805715",
+   "distance_km": 6.032,
+   "hours": 44.01,
+   "hit": 0
+  },
+  {
+   "event_id": "99071478",
+   "distance_km": 4.674,
+   "hours": 22.98,
+   "hit": 1
+  },
+  {
+   "event_id": "99339733",
+   "distance_km": 319.89,
+   "hours": 0.62,
+   "hit": 0
+  }
+ ],
+ "meta": [
+  {
+   "label": "export_results.py",
+   "value": "\"\"\"Export the key results as small JSON files for the results dashboard.\n\nRun from the project folder (after notebooks 01-03):\n    uv run python src/export_results.py\nWrites reports/dashboard/*.json, each as {\"rows\": [...], \"meta\": [...]}.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport json\nimport sys\nimport warnings\nfrom pathlib import Path\n\nimport joblib\nimport numpy as np\nimport pandas as pd\nfrom sklearn.calibration import calibration_curve\nfrom sklearn.dummy import DummyClassifier\nfrom sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier\nfrom sklearn.inspection import permutation_importance\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split\n\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT))\nwarnings.filterwarnings(\"ignore\")\n\nfrom src.data import HORIZONS, TARGET_COLS, TIME_COL, EVENT_COL, feature_columns, make_labels  # noqa: E402\nfrom src.model import MultiHorizonModel, hybrid_scorer, make_pipeline, risk_band, score  # noqa: E402\n\nOUT = ROOT / \"reports\" / \"dashboard\"\nCODE = Path(__file__).read_text(encoding=\"utf-8\")\n\n\ndef save(name: str, rows: list[dict], made_from: str) -> None:\n    \"\"\"Write one dataset with the code that made it.\"\"\"\n    meta = [{\"label\": \"export_results.py\", \"value\": CODE, \"type\": \"code\", \"lang\": \"python\"},\n            {\"label\": \"Input\", \"value\": made_from}]\n    (OUT / f\"{name}.json\").write_text(json.dumps({\"rows\": rows, \"meta\": meta}, indent=1), encoding=\"utf-8\")\n    print(\"wrote\", name, len(rows), \"rows\")\n\n\ndef main() -> None:\n    \"\"\"Compute every number the dashboard shows.\"\"\"\n    OUT.mkdir(parents=True, exist_ok=True)\n    df = pd.read_csv(ROOT / \"data\" / \"processed\" / \"train_clean.csv\")\n    test = pd.read_csv(ROOT / \"data\" / \"test\" / \"test_set.csv\")\n    bundle = joblib.load(ROOT / \"models\" / \"fire_risk_model.joblib\")\n    model, features = bundle[\"model\"], bundle[\"features\"]\n\n    # 1. Fires per time limit (all 221 training fires)\n    lab = make_labels(df[TIME_COL], df[EVENT_COL])\n    save(\"label_counts\", [{\"horizon\": f\"{h} h\", \"hit\": int((lab[f\"hit_{h}h\"] == 1).sum()),\n                           \"no_hit\": int((lab[f\"hit_{h}h\"] == 0).sum()), \"skipped\": int(lab[f\"hit_{h}h\"].isna().sum())}\n                          for h in HORIZONS], \"data/processed/train_clean.csv\")\n\n    # 2. Distance vs outcome, one row per fire\n    save(\"fires\", [{\"event_id\": str(r.event_id), \"distance_km\": round(r.dist_min_ci_0_5h / 1000, 3),\n                    \"hours\": round(getattr(r, TIME_COL), 2), \"hit\": int(getattr(r, EVENT_COL))}\n                   for r in df.itertuples()], \"data/processed/train_clean.csv\")\n\n    # 3. Model comparison, 5-fold CV on the same training split as notebook 02\n    group = df[EVENT_COL] + ((df[EVENT_COL] == 1) & (df[TIME_COL] <= 12))\n    train, _ = train_test_split(df, test_size=0.15, stratify=group, random_state=42)\n    X, y = train[features], train[TARGET_COLS].to_numpy()\n    folds = list(StratifiedKFold(5, shuffle=True, random_state=42).split(X, group.loc[train.index]))\n    models = {\"Baseline (average)\": DummyClassifier(strategy=\"prior\"),\n              \"Logistic Regression\": LogisticRegression(max_iter=5000),\n              \"Gradient Boosting\": GradientBoostingClassifier(random_state=42),\n              \"Random Forest\": RandomForestClassifier(n_estimators=300, random_state=42)}\n    rows = [{\"model\": n, \"hybrid\": round(float(cross_val_score(MultiHorizonModel(make_pipeline(c)), X, y, cv=folds,\n                                                                 scoring=hybrid_scorer, n_jobs=-1).mean()), 4)}\n            for n, c in models.items()]\n    rows.append({\"model\": \"Random Forest (tuned)\", \"hybrid\": round(float(bundle[\"cv_hybrid\"]), 4)})\n    save(\"model_cv\", rows, \"data/processed/train_clean.csv (85% training split), models/fire_risk_model.joblib\")\n\n    # 4. Scores on the 34 held-out test fires\n    probs = model.predict_proba(test[features])\n    s = score(probs, test[TIME_COL], test[EVENT_COL])\n    save(\"test_scores\", [{\"metric\": k, \"value\": round(float(v), 4)} for k, v in s.items()],\n         \"data/test/test_set.csv, models/fire_risk_model.joblib\")\n\n    # 5. Calibration on the test set (12/24/48 h, 4 bins each)\n    tl = make_labels(test[TIME_COL], test[EVENT_COL])\n    cal = []\n    for k, h in enumerate((12, 24, 48)):\n        known = tl[f\"hit_{h}h\"].notna().to_numpy()\n        real, pred = calibration_curve(tl.loc[known, f\"hit_{h}h\"], probs[known, k], n_bins=4, strategy=\"quantile\")\n        cal += [{\"horizon\": f\"{h} h\", \"predicted_pct\": round(p * 100, 1), \"real_pct\": round(r * 100, 1)} for p, r in zip(pred, real)]\n    save(\"calibration\", cal, \"data/test/test_set.csv, models/fire_risk_model.joblib\")\n\n    # 6. Feature importance (drop in Hybrid score when a feature is shuffled)\n    imp = permutation_importance(model, test[features], test[TARGET_COLS].to_numpy(), scoring=hybrid_scorer,\n                                 n_repeats=10, random_state=42, n_jobs=-1)\n    order = np.argsort(imp.importances_mean)[::-1][:5]\n    save(\"importance\", [{\"feature\": features[i], \"importance\": round(float(imp.importances_mean[i]), 4)} for i in order],\n         \"data/test/test_set.csv, models/fire_risk_model.joblib\")\n\n    # 7. Predictions for the 95 competition fires (no answers known)\n    new = pd.read_csv(ROOT / \"data\" / \"raw\" / \"test.csv\")\n    p = model.predict_proba(new[features]) * 100\n    band = risk_band(p[:, 2]).astype(str)\n    save(\"new_fires\", [{\"event_id\": str(e), \"distance_km\": round(d / 1000, 2), \"risk_12h\": round(a, 1), \"risk_24h\": round(b, 1),\n                        \"risk_48h\": round(c, 1), \"band\": bd}\n                       for e, d, a, b, c, bd in zip(new[\"event_id\"], new[\"dist_min_ci_0_5h\"], p[:, 0], p[:, 1], p[:, 2], band)],\n         \"data/raw/test.csv, models/fire_risk_model.joblib\")\n\n\nif __name__ == \"__main__\":\n    main()\n",
+   "type": "code",
+   "lang": "python"
+  },
+  {
+   "label": "Input",
+   "value": "data/processed/train_clean.csv"
+  }
+ ]
+}
