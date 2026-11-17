@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wildfire Evacuation Risk Model</title>
+<style>
+:root {
+  --color-fg: #1d2330; --color-fg-muted: #5d6676; --color-bg: #f6f7f9; --color-panel: #ffffff; --color-border-line: #e2e5ea;
+  --color-ok: #1f8a4c; --color-warn: #b7791f; --color-bad: #c53030;
+  --font-anthropic-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-anthropic-serif: Georgia, "Times New Roman", serif;
+  --cds-font-size-caption: 12px; --cds-font-size-body: 15px; --cds-font-size-heading: 17px; --cds-font-size-title: 30px; --cds-font-weight-medium: 600;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 16px; --cds-gap-xl: 24px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 16px; --cds-pad-xl: 24px; --cds-radius: 10px;
+  --cds-chart-muted: #b9c0cc; --cds-chart-status-critical: #d6453d; --cds-chart-grid: #e8ebf0; --cds-chart-axis: #c5cbd5; --cds-chart-reference: #7a8291;
+  --cds-text-secondary: #5d6676; --cds-surface-popover: #ffffff; --cds-border: #dfe3e8; --cds-shadow-popover: 0 4px 16px rgba(20, 30, 50, .12);
+  --accent-1: #2f6fdb; --accent-2: #e08a1e; --accent-3: #2a9d6f;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-fg: #e8ebf1; --color-fg-muted: #a1a9b8; --color-bg: #12151b; --color-panel: #1a1e26; --color-border-line: #2c323d;
+    --color-ok: #4cc38a; --color-warn: #e3a948; --color-bad: #f07167;
+    --cds-chart-muted: #5b6475; --cds-chart-status-critical: #f0645b; --cds-chart-grid: #262c36; --cds-chart-axis: #3b4351; --cds-chart-reference: #9aa3b2;
+    --cds-text-secondary: #a1a9b8; --cds-surface-popover: #222833; --cds-border: #353c48; --cds-shadow-popover: 0 4px 16px rgba(0, 0, 0, .4);
+    --accent-1: #6aa0ff; --accent-2: #f2a541; --accent-3: #4cc38a;
+    color-scheme: dark;
+  }
+}
+body { margin: 0; background: var(--color-bg); color: var(--color-fg); font-family: var(--font-anthropic-sans); }
+#dash-root { max-width: 1180px; margin: 0 auto; padding: 28px max(16px, 3vw) 48px; box-sizing: border-box; }
+.dash-select { font: inherit; font-size: 13px; color: var(--color-fg); background-color: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 8px; padding: 5px 10px; }
+.footer { margin-top: 32px; font-size: 12px; color: var(--color-fg-muted); }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>window.__DATA__ = {"label_counts":[{"horizon":"12 h","hit":49,"no_hit":166,"skipped":6},{"horizon":"24 h","hit":63,"no_hit":133,"skipped":25},{"horizon":"48 h","hit":66,"no_hit":100,"skipped":55},{"horizon":"72 h","hit":69,"no_hit":0,"skipped":152}],"fires":[{"event_id":"10892457","distance_km":6.166,"hours":18.89,"hit":0},{"event_id":"11757157","distance_km":2.931,"hours":22.05,"hit":1},{"event_id":"11945086","distance_km":3.272,"hours":0.89,"hit":1},{"event_id":"12044083","distance_km":64.12,"hours":60.95,"hit":0},{"event_id":"12052347","distance_km":18.005,"hours":44.99,"hit":0},{"event_id":"12773599","distance_km":35.233,"hours":44.03,"hit":0},{"event_id":"13122360","distance_km":3.53,"hours":14.85,"hit":1},{"event_id":"13745272","distance_km":8.039,"hours":66.77,"hit":0},{"event_id":"15247236","distance_km":31.759,"hours":39.91,"hit":0},{"event_id":"15743535","distance_km":1.995,"hours":54.64,"hit":1},{"event_id":"15846088","distance_km":260.305,"hours":66.64,"hit":0},{"event_id":"16870867","distance_km":2.703,"hours":15.92,"hit":1},{"event_id":"17127751","distance_km":4.262,"hours":10.91,"hit":1},{"event_id":"17735080","distance_km":482.692,"hours":18.28,"hit":0},{"event_id":"17888481","distance_km":300.641,"hours":55.46,"hit":0},{"event_id":"18032557","distance_km":54.957,"hours":64.57,"hit":0},{"event_id":"18104294","distance_km":1.743,"hours":23.84,"hit":1},{"event_id":"18150961","distance_km":2.965,"hours":3.53,"hit":1},{"event_id":"18292206","distance_km":1.135,"hours":5.82,"hit":1},{"event_id":"18475932","distance_km":495.662,"hours":66.43,"hit":0},{"event_id":"18522515","distance_km":7.224,"hours":37.39,"hit":0},{"event_id":"18675176","distance_km":34.606,"hours":24.17,"hit":0},{"event_id":"19306260","distance_km":45.739,"hours":66.44,"hit":0},{"event_id":"19552816","distance_km":754.124,"hours":61.27,"hit":0},{"event_id":"19771815","distance_km":2.617,"hours":0.52,"hit":1},{"event_id":"20307683","distance_km":756.438,"hours":57.64,"hit":0},{"event_id":"20620516","distance_km":1.784,"hours":1.4,"hit":1},{"event_id":"20698681","distance_km":2.685,"hours":2.56,"hit":1},{"event_id":"21481903","distance_km":123.439,"hours":62.82,"hit":0},{"event_id":"21530188","distance_km":168.375,"hours":48.93,"hit":0},{"event_id":"21692904","distance_km":2.43,"hours":0.58,"hit":1},{"event_id":"22577693","distance_km":1.316,"hours":5.46,"hit":1},{"event_id":"22620173","distance_km":2.035,"hours":37.62,"hit":1},{"event_id":"22622416","distance_km":281.07,"hours":66.27,"hit":0},{"event_id":"23007167","distance_km":73.004,"hours":63.72,"hit":0},{"event_id":"23708068","distance_km":125.95,"hours":18.8,"hit":0},{"event_id":"23886014","distance_km":3.223,"hours":3.21,"hit":1},{"event_id":"24491699","distance_km":2.583,"hours":14.73,"hit":1},{"event_id":"24514437","distance_km":299.438,"hours":66.4,"hit":0},{"event_id":"24870571","distance_km":40.012,"hours":65.69,"hit":0},{"event_id":"24959246","distance_km":255.529,"hours":66.45,"hit":0},{"event_id":"25027537","distance_km":15.398,"hours":11.25,"hit":0},{"event_id":"25766655","distance_km":2.622,"hours":1.48,"hit":1},{"event_id":"25909534","distance_km":4.496,"hours":1.99,"hit":1},{"event_id":"26151072","distance_km":2.833,"hours":4.44,"hit":1},{"event_id":"26429413","distance_km":23.677,"hours":12.82,"hit":0},{"event_id":"26940253","distance_km":210.184,"hours":59.77,"hit":0},{"event_id":"27517432","distance_km":2.117,"hours":1.58,"hit":1},{"event_id":"27991695","distance_km":67.099,"hours":60.31,"hit":0},{"event_id":"28132196","distance_km":263.599,"hours":61.48,"hit":0},{"event_id":"28212683","distance_km":390.952,"hours":48.0,"hit":0},{"event_id":"30421787","distance_km":254.943,"hours":65.08,"hit":0},{"event_id":"31054513","distance_km":261.139,"hours":66.3,"hit":0},{"event_id":"31560147","distance_km":1.883,"hours":13.66,"hit":1},{"event_id":"31948591","distance_km":99.978,"hours":21.07,"hit":0},{"event_id":"32093256","distance_km":72.615,"hours":66.13,"hit":0},{"event_id":"33502571","distance_km":124.717,"hours":61.8,"hit":0},{"event_id":"33928266","distance_km":2.671,"hours":14.47,"hit":1},{"event_id":"34027802","distance_km":139.178,"hours":62.86,"hit":0},{"event_id":"34501712","distance_km":21.807,"hours":39.96,"hit":0},{"event_id":"34889301","distance_km":1.187,"hours":0.06,"hit":1},{"event_id":"34908295","distance_km":476.87,"hours":63.96,"hit":0},{"event_id":"34940889","distance_km":2.009,"hours":0.0,"hit":1},{"event_id":"35324503","distance_km":61.571,"hours":65.58,"hit":0},{"event_id":"35610300","distance_km":219.692,"hours":66.05,"hit":0},{"event_id":"35949465","distance_km":282.251,"hours":64.62,"hit":0},{"event_id":"36527758","distance_km":13.898,"hours":15.95,"hit":0},{"event_id":"36999334","distance_km":8.725,"hours":61.07,"hit":0},{"event_id":"37136049","distance_km":149.724,"hours":66.03,"hit":0},{"event_id":"37780023","distance_km":94.773,"hours":66.2,"hit":0},{"event_id":"38112926","distance_km":260.354,"hours":65.02,"hit":0},{"event_id":"38412292","distance_km":55.358,"hours":66.57,"hit":0},{"event_id":"38909367","distance_km":68.907,"hours":1.29,"hit":0},{"event_id":"39324200","distance_km":430.518,"hours":49.55,"hit":0},{"event_id":"39687487","distance_km":2.654,"hours":0.74,"hit":1},{"event_id":"39841201","distance_km":167.003,"hours":66.01,"hit":0},{"event_id":"40086180","distance_km":6.468,"hours":28.61,"hit":0},{"event_id":"40504901","distance_km":539.571,"hours":66.97,"hit":0},{"event_id":"41218264","distance_km":5.451,"hours":18.81,"hit":0},{"event_id":"41274865","distance_km":597.083,"hours":54.55,"hit":0},{"event_id":"42563089","distance_km":86.441,"hours":39.92,"hit":0},{"event_id":"42731036","distance_km":2.284,"hours":66.92,"hit":1},{"event_id":"42751447","distance_km":172.781,"hours":65.62,"hit":0},{"event_id":"44291860","distance_km":22.067,"hours":64.5,"hit":0},{"event_id":"46217176","distance_km":21.106,"hours":66.49,"hit":0},{"event_id":"46826716","distance_km":1.068,"hours":0.13,"hit":1},{"event_id":"46976428","distance_km":131.902,"hours":65.2,"hit":0},{"event_id":"47422636","distance_km":126.187,"hours":58.53,"hit":0},{"event_id":"47616223","distance_km":85.785,"hours":66.19,"hit":0},{"event_id":"47633923","distance_km":2.784,"hours":3.21,"hit":1},{"event_id":"48888338","distance_km":32.619,"hours":42.31,"hit":0},{"event_id":"48971236","distance_km":64.859,"hours":63.75,"hit":0},{"event_id":"49088441","distance_km":32.487,"hours":19.16,"hit":0},{"event_id":"49304487","distance_km":579.342,"hours":17.64,"hit":0},{"event_id":"49343570","distance_km":6.344,"hours":26.53,"hit":0},{"event_id":"49498922","distance_km":163.284,"hours":64.44,"hit":0},{"event_id":"49705111","distance_km":44.414,"hours":55.82,"hit":0},{"event_id":"49907151","distance_km":2.431,"hours":0.51,"hit":1},{"event_id":"50111753","distance_km":14.753,"hours":66.86,"hit":0},{"event_id":"50154005","distance_km":316.361,"hours":64.56,"hit":0},{"event_id":"50232090","distance_km":757.7,"hours":19.21,"hit":0},{"event_id":"50442487","distance_km":81.883,"hours":14.67,"hit":0},{"event_id":"50534601","distance_km":452.829,"hours":14.98,"hit":0},{"event_id":"51019821","distance_km":5.965,"hours":61.37,"hit":0},{"event_id":"51167521","distance_km":174.24,"hours":64.07,"hit":0},{"event_id":"51302326","distance_km":1.331,"hours":8.17,"hit":1},{"event_id":"51568885","distance_km":203.027,"hours":66.99,"hit":0},{"event_id":"51688491","distance_km":7.469,"hours":64.32,"hit":0},{"event_id":"52259907","distance_km":2.297,"hours":43.85,"hit":1},{"event_id":"52398567","distance_km":9.39,"hours":32.81,"hit":0},{"event_id":"52440944","distance_km":311.445,"hours":62.53,"hit":0},{"event_id":"52813329","distance_km":2.091,"hours":2.66,"hit":1},{"event_id":"54163612","distance_km":131.874,"hours":66.73,"hit":0},{"event_id":"54555851","distance_km":3.347,"hours":3.79,"hit":1},{"event_id":"54606261","distance_km":2.511,"hours":7.61,"hit":1},{"event_id":"55031524","distance_km":4.164,"hours":5.47,"hit":1},{"event_id":"55093960","distance_km":28.058,"hours":47.0,"hit":0},{"event_id":"55451314","distance_km":1.524,"hours":4.46,"hit":1},{"event_id":"56190238","distance_km":1.276,"hours":0.55,"hit":1},{"event_id":"56860504","distance_km":371.683,"hours":65.37,"hit":0},{"event_id":"57382947","distance_km":288.44,"hours":36.17,"hit":0},{"event_id":"59050390","distance_km":104.63,"hours":39.27,"hit":0},{"event_id":"59088464","distance_km":61.156,"hours":59.22,"hit":0},{"event_id":"59822043","distance_km":51.12,"hours":64.18,"hit":0},{"event_id":"59863246","distance_km":5.216,"hours":57.09,"hit":0},{"event_id":"59912474","distance_km":0.657,"hours":13.11,"hit":1},{"event_id":"60008113","distance_km":498.519,"hours":60.07,"hit":0},{"event_id":"60132804","distance_km":2.799,"hours":1.26,"hit":1},{"event_id":"60328541","distance_km":218.084,"hours":65.72,"hit":0},{"event_id":"60871141","distance_km":0.869,"hours":0.41,"hit":1},{"event_id":"60883493","distance_km":5.405,"hours":60.73,"hit":0},{"event_id":"61186593","distance_km":200.229,"hours":63.89,"hit":0},{"event_id":"61455506","distance_km":152.445,"hours":66.64,"hit":0},{"event_id":"62295471","distance_km":3.045,"hours":0.13,"hit":1},{"event_id":"62568772","distance_km":1.815,"hours":0.38,"hit":1},{"event_id":"62887976","distance_km":2.113,"hours":3.32,"hit":1},{"event_id":"63182365","distance_km":2.942,"hours":45.34,"hit":1},{"event_id":"64255332","distance_km":158.866,"hours":33.39,"hit":0},{"event_id":"64647602","distance_km":275.809,"hours":65.25,"hit":0},{"event_id":"65120642","distance_km":131.497,"hours":2.48,"hit":0},{"event_id":"66457746","distance_km":572.546,"hours":34.53,"hit":0},{"event_id":"66587029","distance_km":83.352,"hours":26.39,"hit":0},{"event_id":"66678641","distance_km":2.634,"hours":7.49,"hit":1},{"event_id":"66725353","distance_km":1.458,"hours":55.17,"hit":1},{"event_id":"67308425","distance_km":2.578,"hours":3.36,"hit":1},{"event_id":"67947674","distance_km":5.849,"hours":9.4,"hit":0},{"event_id":"68486145","distance_km":136.031,"hours":62.33,"hit":0},{"event_id":"68898469","distance_km":5.907,"hours":63.56,"hit":0},{"event_id":"68911231","distance_km":0.495,"hours":0.87,"hit":1},{"event_id":"69453871","distance_km":2.504,"hours":0.51,"hit":1},{"event_id":"69696766","distance_km":13.841,"hours":20.46,"hit":0},{"event_id":"69788114","distance_km":2.187,"hours":20.87,"hit":1},{"event_id":"69938994","distance_km":1.373,"hours":3.67,"hit":1},{"event_id":"70156135","distance_km":412.695,"hours":18.92,"hit":0},{"event_id":"70401139","distance_km":0.645,"hours":1.94,"hit":1},{"event_id":"71012530","distance_km":312.721,"hours":12.24,"hit":0},{"event_id":"71424445","distance_km":3.176,"hours":1.47,"hit":1},{"event_id":"71782873","distance_km":194.325,"hours":55.07,"hit":0},{"event_id":"72668739","distance_km":11.948,"hours":36.96,"hit":0},{"event_id":"72709271","distance_km":14.844,"hours":64.45,"hit":0},{"event_id":"72762907","distance_km":31.059,"hours":43.82,"hit":0},{"event_id":"73046875","distance_km":8.267,"hours":66.6,"hit":0},{"event_id":"73362817","distance_km":1.465,"hours":19.56,"hit":1},{"event_id":"73464738","distance_km":295.595,"hours":65.7,"hit":0},{"event_id":"74520040","distance_km":27.514,"hours":63.38,"hit":0},{"event_id":"74572738","distance_km":488.007,"hours":32.57,"hit":0},{"event_id":"75429514","distance_km":42.221,"hours":65.33,"hit":0},{"event_id":"76217490","distance_km":8.293,"hours":62.42,"hit":0},{"event_id":"76322687","distance_km":617.975,"hours":64.78,"hit":0},{"event_id":"76903640","distance_km":212.682,"hours":62.71,"hit":0},{"event_id":"77028404","distance_km":0.307,"hours":2.98,"hit":1},{"event_id":"78390748","distance_km":98.828,"hours":38.53,"hit":0},{"event_id":"78849751","distance_km":318.819,"hours":25.42,"hit":0},{"event_id":"79439605","distance_km":10.266,"hours":38.44,"hit":0},{"event_id":"79655801","distance_km":251.41,"hours":62.77,"hit":0},{"event_id":"80054307","distance_km":178.448,"hours":58.94,"hit":0},{"event_id":"80087496","distance_km":186.96,"hours":66.79,"hit":0},{"event_id":"80232624","distance_km":330.903,"hours":20.96,"hit":0},{"event_id":"80265452","distance_km":7.893,"hours":62.89,"hit":0},{"event_id":"80340843","distance_km":520.347,"hours":15.7,"hit":0},{"event_id":"80550714","distance_km":0.563,"hours":3.27,"hit":1},{"event_id":"80745551","distance_km":97.022,"hours":62.84,"hit":0},{"event_id":"80823027","distance_km":121.375,"hours":38.64,"hit":0},{"event_id":"81413445","distance_km":402.42,"hours":0.37,"hit":0},{"event_id":"81541989","distance_km":31.135,"hours":65.7,"hit":0},{"event_id":"82428611","distance_km":143.6,"hours":64.58,"hit":0},{"event_id":"82440747","distance_km":5.719,"hours":15.15,"hit":0},{"event_id":"82683747","distance_km":337.738,"hours":50.52,"hit":0},{"event_id":"83950561","distance_km":1.181,"hours":14.32,"hit":1},{"event_id":"84048308","distance_km":496.409,"hours":58.41,"hit":0},{"event_id":"84366259","distance_km":4.186,"hours":0.54,"hit":1},{"event_id":"84486575","distance_km":363.654,"hours":43.36,"hit":0},{"event_id":"84940844","distance_km":0.816,"hours":0.29,"hit":1},{"event_id":"84946127","distance_km":2.576,"hours":0.72,"hit":1},{"event_id":"85577091","distance_km":52.204,"hours":63.94,"hit":0},{"event_id":"85752079","distance_km":1.986,"hours":2.06,"hit":1},{"event_id":"86479991","distance_km":24.292,"hours":66.66,"hit":0},{"event_id":"86806129","distance_km":1.95,"hours":21.53,"hit":1},{"event_id":"86957035","distance_km":2.472,"hours":0.01,"hit":1},{"event_id":"87010233","distance_km":8.718,"hours":55.57,"hit":0},{"event_id":"87095211","distance_km":580.998,"hours":37.02,"hit":0},{"event_id":"90380661","distance_km":158.184,"hours":46.53,"hit":0},{"event_id":"90654456","distance_km":164.451,"hours":56.88,"hit":0},{"event_id":"90827686","distance_km":286.02,"hours":65.68,"hit":0},{"event_id":"91055825","distance_km":219.317,"hours":62.99,"hit":0},{"event_id":"91497993","distance_km":20.264,"hours":61.31,"hit":0},{"event_id":"91772155","distance_km":360.854,"hours":66.5,"hit":0},{"event_id":"92588540","distance_km":2.445,"hours":3.71,"hit":1},{"event_id":"93260759","distance_km":15.879,"hours":62.84,"hit":0},{"event_id":"93408578","distance_km":1.149,"hours":14.84,"hit":1},{"event_id":"94404349","distance_km":3.328,"hours":11.83,"hit":1},{"event_id":"94424495","distance_km":7.509,"hours":18.71,"hit":0},{"event_id":"94488511","distance_km":209.574,"hours":64.78,"hit":0},{"event_id":"95839532","distance_km":5.639,"hours":66.09,"hit":0},{"event_id":"96270286","distance_km":196.117,"hours":65.01,"hit":0},{"event_id":"96372213","distance_km":325.977,"hours":43.11,"hit":0},{"event_id":"97075632","distance_km":280.232,"hours":66.34,"hit":0},{"event_id":"97362560","distance_km":4.545,"hours":5.69,"hit":1},{"event_id":"97805715","distance_km":6.032,"hours":44.01,"hit":0},{"event_id":"99071478","distance_km":4.674,"hours":22.98,"hit":1},{"event_id":"99339733","distance_km":319.89,"hours":0.62,"hit":0}],"model_cv":[{"model":"Baseline (average)","hybrid":0.7381},{"model":"Logistic Regression","hybrid":0.939},{"model":"Gradient Boosting","hybrid":0.97},{"model":"Random Forest","hybrid":0.9725},{"model":"Random Forest (tuned)","hybrid":0.976}],"test_scores":[{"metric":"brier_12h","value":0.0537},{"metric":"brier_24h","value":0.0383},{"metric":"brier_48h","value":0.0028},{"metric":"brier_72h","value":0.0},{"metric":"brier","value":0.0126},{"metric":"c_index","value":0.9329},{"metric":"hybrid","value":0.971}],"calibration":[{"horizon":"12 h","predicted_pct":0.0,"real_pct":0.0},{"horizon":"12 h","predicted_pct":17.6,"real_pct":25.0},{"horizon":"12 h","predicted_pct":79.0,"real_pct":75.0},{"horizon":"24 h","predicted_pct":0.0,"real_pct":0.0},{"horizon":"24 h","predicted_pct":0.2,"real_pct":0.0},{"horizon":"24 h","predicted_pct":58.9,"real_pct":66.7},{"horizon":"24 h","predicted_pct":98.5,"real_pct":85.7},{"horizon":"48 h","predicted_pct":0.0,"real_pct":0.0},{"horizon":"48 h","predicted_pct":2.0,"real_pct":0.0},{"horizon":"48 h","predicted_pct":79.0,"real_pct":83.3},{"horizon":"48 h","predicted_pct":99.9,"real_pct":100.0}],"importance":[{"feature":"dist_min_ci_0_5h","importance":0.3395},{"feature":"event_start_hour","importance":0.0007},{"feature":"dt_first_last_0_5h","importance":0.0001},{"feature":"event_start_month","importance":0.0},{"feature":"centroid_displacement_m","importance":0.0}],"new_fires":[{"event_id":"10662602","distance_km":116.94,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"13353600","distance_km":2.73,"risk_12h":60.3,"risk_24h":99.7,"risk_48h":99.7,"band":"Critical"},{"event_id":"13942327","distance_km":23.27,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"16112781","distance_km":2.4,"risk_12h":74.4,"risk_24h":98.5,"risk_48h":99.7,"band":"Critical"},{"event_id":"17132808","distance_km":26.92,"risk_12h":1.6,"risk_24h":1.6,"risk_48h":1.6,"band":"Low"},{"event_id":"17445696","distance_km":164.88,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"17599982","distance_km":301.99,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"18750374","distance_km":2.91,"risk_12h":65.0,"risk_24h":97.7,"risk_48h":97.7,"band":"Critical"},{"event_id":"21365245","distance_km":65.56,"risk_12h":0.1,"risk_24h":0.1,"risk_48h":0.1,"band":"Low"},{"event_id":"23634840","distance_km":0.7,"risk_12h":46.2,"risk_24h":93.5,"risk_48h":99.1,"band":"Critical"},{"event_id":"24461897","distance_km":5.8,"risk_12h":0.2,"risk_24h":0.3,"risk_48h":4.1,"band":"Low"},{"event_id":"25353357","distance_km":161.89,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"27052376","distance_km":0.07,"risk_12h":95.7,"risk_24h":98.9,"risk_48h":99.4,"band":"Critical"},{"event_id":"29312582","distance_km":69.09,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"30451420","distance_km":11.23,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"31488932","distance_km":555.28,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"33717208","distance_km":165.05,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"34826241","distance_km":41.19,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"35311039","distance_km":1.2,"risk_12h":99.3,"risk_24h":99.7,"risk_48h":99.9,"band":"Critical"},{"event_id":"36423390","distance_km":7.8,"risk_12h":0.0,"risk_24h":0.1,"risk_48h":1.0,"band":"Low"},{"event_id":"37196135","distance_km":1.83,"risk_12h":44.2,"risk_24h":97.0,"risk_48h":98.4,"band":"Critical"},{"event_id":"37355453","distance_km":388.34,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"37536067","distance_km":1.67,"risk_12h":45.8,"risk_24h":99.2,"risk_48h":99.8,"band":"Critical"},{"event_id":"39717591","distance_km":180.58,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"40833127","distance_km":21.59,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"41907240","distance_km":2.63,"risk_12h":68.4,"risk_24h":96.5,"risk_48h":96.5,"band":"Critical"},{"event_id":"42963675","distance_km":315.67,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"42997746","distance_km":16.49,"risk_12h":1.7,"risk_24h":1.7,"risk_48h":1.7,"band":"Low"},{"event_id":"43341281","distance_km":20.54,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"43371713","distance_km":1.4,"risk_12h":40.0,"risk_24h":71.8,"risk_48h":97.7,"band":"Critical"},{"event_id":"44872967","distance_km":2.84,"risk_12h":47.3,"risk_24h":75.5,"risk_48h":75.8,"band":"Critical"},{"event_id":"46574754","distance_km":4.84,"risk_12h":21.5,"risk_24h":92.1,"risk_48h":92.1,"band":"Critical"},{"event_id":"46767506","distance_km":2.05,"risk_12h":44.7,"risk_24h":95.8,"risk_48h":98.5,"band":"Critical"},{"event_id":"49169401","distance_km":315.1,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"49502022","distance_km":9.82,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":1.0,"band":"Low"},{"event_id":"49565135","distance_km":0.84,"risk_12h":92.9,"risk_24h":99.8,"risk_48h":99.8,"band":"Critical"},{"event_id":"50233410","distance_km":4.01,"risk_12h":74.1,"risk_24h":98.4,"risk_48h":99.5,"band":"Critical"},{"event_id":"50541231","distance_km":31.0,"risk_12h":0.1,"risk_24h":0.3,"risk_48h":0.9,"band":"Low"},{"event_id":"51664538","distance_km":139.7,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"52004768","distance_km":124.16,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"52039660","distance_km":44.95,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"52614032","distance_km":374.4,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"53407288","distance_km":24.99,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"53799231","distance_km":545.78,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"54348573","distance_km":303.38,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"54459140","distance_km":11.16,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"54759639","distance_km":13.37,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"54801108","distance_km":3.63,"risk_12h":85.0,"risk_24h":92.5,"risk_48h":98.1,"band":"Critical"},{"event_id":"55504460","distance_km":4.69,"risk_12h":36.7,"risk_24h":94.7,"risk_48h":95.3,"band":"Critical"},{"event_id":"58802003","distance_km":261.24,"risk_12h":0.1,"risk_24h":0.3,"risk_48h":1.2,"band":"Low"},{"event_id":"58854430","distance_km":146.17,"risk_12h":0.7,"risk_24h":0.7,"risk_48h":1.2,"band":"Low"},{"event_id":"59191113","distance_km":757.06,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"59221605","distance_km":1.11,"risk_12h":33.9,"risk_24h":96.9,"risk_48h":99.6,"band":"Critical"},{"event_id":"60804856","distance_km":2.02,"risk_12h":87.5,"risk_24h":96.9,"risk_48h":99.9,"band":"Critical"},{"event_id":"61713947","distance_km":261.66,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"62129708","distance_km":1.46,"risk_12h":78.5,"risk_24h":81.3,"risk_48h":98.3,"band":"Critical"},{"event_id":"66849621","distance_km":1.9,"risk_12h":85.8,"risk_24h":85.8,"risk_48h":94.5,"band":"Critical"},{"event_id":"67124529","distance_km":247.25,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"69348035","distance_km":382.69,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"69572379","distance_km":445.72,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"69836438","distance_km":191.89,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"70283101","distance_km":1.16,"risk_12h":52.5,"risk_24h":64.4,"risk_48h":71.6,"band":"High"},{"event_id":"70501603","distance_km":0.38,"risk_12h":30.4,"risk_24h":92.9,"risk_48h":98.0,"band":"Critical"},{"event_id":"70993222","distance_km":267.83,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"71474230","distance_km":1.95,"risk_12h":39.4,"risk_24h":96.3,"risk_48h":99.3,"band":"Critical"},{"event_id":"71532972","distance_km":320.4,"risk_12h":0.7,"risk_24h":0.7,"risk_48h":0.9,"band":"Low"},{"event_id":"72973561","distance_km":19.84,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"73023698","distance_km":299.15,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"74751606","distance_km":29.63,"risk_12h":0.1,"risk_24h":0.1,"risk_48h":0.1,"band":"Low"},{"event_id":"74945408","distance_km":0.49,"risk_12h":21.5,"risk_24h":60.6,"risk_48h":72.1,"band":"High"},{"event_id":"75012237","distance_km":0.58,"risk_12h":81.1,"risk_24h":97.2,"risk_48h":97.2,"band":"Critical"},{"event_id":"75726601","distance_km":135.58,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"78173856","distance_km":162.29,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"78227688","distance_km":5.79,"risk_12h":0.2,"risk_24h":0.4,"risk_48h":5.6,"band":"Low"},{"event_id":"78266693","distance_km":32.53,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"78502343","distance_km":112.68,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"78780565","distance_km":209.47,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"80446138","distance_km":403.62,"risk_12h":0.1,"risk_24h":0.3,"risk_48h":1.2,"band":"Low"},{"event_id":"80819726","distance_km":169.44,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"81010506","distance_km":255.94,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"81611002","distance_km":42.47,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"81715663","distance_km":2.49,"risk_12h":50.0,"risk_24h":96.6,"risk_48h":99.7,"band":"Critical"},{"event_id":"82779392","distance_km":253.89,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"83261710","distance_km":32.43,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"84903193","distance_km":29.1,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"87245976","distance_km":133.53,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"87273546","distance_km":16.12,"risk_12h":1.9,"risk_24h":1.9,"risk_48h":1.9,"band":"Low"},{"event_id":"89909836","distance_km":38.66,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"91234126","distance_km":17.9,"risk_12h":1.8,"risk_24h":1.8,"risk_48h":1.8,"band":"Low"},{"event_id":"93027270","distance_km":2.86,"risk_12h":57.2,"risk_24h":98.5,"risk_48h":99.6,"band":"Critical"},{"event_id":"94627327","distance_km":16.52,"risk_12h":0.1,"risk_24h":0.3,"risk_48h":1.2,"band":"Low"},{"event_id":"96570675","distance_km":31.73,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"97225766","distance_km":145.18,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"},{"event_id":"98446281","distance_km":102.92,"risk_12h":0.1,"risk_24h":0.3,"risk_48h":0.9,"band":"Low"},{"event_id":"99649465","distance_km":121.02,"risk_12h":0.0,"risk_24h":0.0,"risk_48h":0.0,"band":"Low"}]};</script>
+<script>
+window.dash = (() => {
+  const raw = window.__DATA__, calcs = {}, draws = {}, order = [];
+  const data = (id) => {
+    if (raw[id]) return { status: 'ok', data: raw[id], columns: Object.keys(raw[id][0] || {}) };
+    const c = calcs[id];
+    if (c) return { status: 'ok', data: c.fn(...c.inputs.map((i) => data(i).data)) };
+    return { status: 'missing', data: [] };
+  };
+  const run = (name) => document.querySelectorAll(`[data-draw="${name}"]`).forEach((el) => draws[name](el));
+  return {
+    colors: ['var(--accent-1)', 'var(--accent-2)', 'var(--accent-3)'],
+    data,
+    calc: (id, spec) => { calcs[id] = spec; },
+    loader: () => {},
+    onData: () => {},
+    params: () => ({}), setParams: () => {}, resetParams: () => {}, setLink: () => {}, refresh: () => {},
+    draw: (name, fn) => {
+      if (typeof fn === 'function') { draws[name] = fn; order.push(name); }
+      else if (draws[name]) run(name);
+    },
+    _drawAll: () => order.forEach(run),
+  };
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+<style>
+  /* Results report, second take: scorecard first, then why (distance, timing), then how good (score parts, models, calibration), then the forecast table. */
+  .wr { display: flex; flex-direction: column; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+  .wr h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+  .wr h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; text-wrap: balance; }
+  .wr p { margin: 0; line-height: 1.5; max-width: 70ch; }
+  .wr .muted { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .wr .eyebrow { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .wr .head { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+  .wr .card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-md); min-width: 0; }
+  .wr .score { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--cds-gap-lg); }
+  .wr .score > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .wr .score .big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .wr .score .k { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .wr .chip { align-self: flex-start; font-size: var(--cds-font-size-caption); padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; }
+  .wr .chip.ok { color: var(--color-ok); } .wr .chip.bad { color: var(--color-bad); } .wr .chip.warn { color: var(--color-warn); }
+  .wr .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--cds-gap-lg); }
+  .wr .grid2 > * { min-width: 0; }
+  .wr .chart { position: relative; width: 100%; min-height: 220px; }
+  .wr .chart svg { display: block; width: 100%; overflow: visible; }
+  .wr .chart text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); }
+  .wr .chart .val { fill: var(--color-fg); font-variant-numeric: tabular-nums; }
+  .wr .chart .grid line { stroke: var(--cds-chart-grid); }
+  .wr .chart .axis path, .wr .chart .axis line { stroke: var(--cds-chart-axis); }
+  .wr .chart .fail { padding: var(--cds-pad-md); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .wr .tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; z-index: 2; font-variant-numeric: tabular-nums; }
+  .wr .tip > :first-child { font-weight: var(--cds-font-weight-medium); }
+  .wr .legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .wr .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .wr .sw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .wr .sw.hit { background: var(--cds-chart-status-critical); } .wr .sw.nohit { background: var(--cds-chart-muted); }
+  .wr .tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm); }
+  .wr .tablewrap { overflow: auto; max-height: 420px; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
+  .wr table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .wr th, .wr td { text-align: right; padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .wr th:first-child, .wr td:first-child { text-align: left; }
+  .wr thead th { position: sticky; top: 0; background: var(--color-panel); color: var(--color-fg-muted); font-weight: var(--cds-font-weight-medium); }
+  .wr .pill { display: inline-block; padding: 0 8px; border-radius: 999px; border: 1px solid currentColor; }
+  .wr .pill.Low { color: var(--color-ok); } .wr .pill.Medium, .wr .pill.High { color: var(--color-warn); } .wr .pill.Critical { color: var(--color-bad); }
+  .wr .meter { display: inline-block; width: 60px; height: 6px; border-radius: 3px; background: var(--cds-chart-grid); vertical-align: middle; margin-left: 6px; overflow: hidden; }
+  .wr .meter > i { display: block; height: 100%; background: var(--cds-chart-status-critical); }
+  .wr ul { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: var(--cds-gap-xs); max-width: 70ch; line-height: 1.5; }
+  .wr details summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+  .wr details[open] summary { margin-bottom: var(--cds-gap-sm); }
+</style>
+
+<div class="wr" data-read lang="en">
+
+  <header class="head" id="summary">
+    <span class="eyebrow">Wildfire evacuation risk · model results</span>
+    <h1>Wildfire Evacuation Risk Model</h1>
+    <p>On fires it had never seen, the model scored <b data-draw="val" data-source="test_scores" data-where="metric=hybrid" data-field="value" data-fmt="3">—</b> on the competition's Hybrid score, against <b data-draw="val" data-source="model_cv" data-where="model=Baseline (average)" data-field="hybrid" data-fmt="3">—</b> for a model that just guesses the average.</p>
+    <p class="muted">It predicts the chance (%) that a wildfire comes within 5 km of an evacuation zone within 12, 24, 48 and 72 hours, using only the fire's first 5 hours. Data: WiDS Global Datathon 2026.</p>
+  </header>
+
+  <section class="card" id="scorecard" aria-label="Scorecard">
+    <div class="score">
+      <div id="sc-hybrid">
+        <span class="k">Hybrid score · test</span>
+        <span class="big" data-draw="val" data-source="test_scores" data-where="metric=hybrid" data-field="value" data-fmt="3">—</span>
+        <span class="chip ok">+<span data-draw="val" data-source="lift" data-row="0" data-field="gain" data-fmt="3">—</span> over baseline (CV)</span>
+      </div>
+      <div id="sc-cindex">
+        <span class="k">Ranking accuracy (C-index) · test</span>
+        <span class="big" data-draw="val" data-source="test_scores" data-where="metric=c_index" data-field="value" data-fmt="pct0">—</span>
+        <span class="k">Fire pairs put in the right order</span>
+      </div>
+      <div id="sc-brier">
+        <span class="k">Weighted Brier · test</span>
+        <span class="big" data-draw="val" data-source="test_scores" data-where="metric=brier" data-field="value" data-fmt="3">—</span>
+        <span class="k">Error of the risk %, lower is better</span>
+      </div>
+      <div id="sc-critical">
+        <span class="k">New fires flagged Critical at 48 h</span>
+        <span class="big" data-draw="val" data-source="band_counts" data-where="band=Critical" data-field="fires" data-fmt="int">—</span>
+        <span class="chip bad">of <span data-draw="val" data-source="band_counts" data-where="band=All" data-field="fires" data-fmt="int">—</span> new fires</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="why-distance">
+    <span class="eyebrow">Why</span>
+    <h2>A fire within about 5 km of a zone hits; one farther away does not</h2>
+    <p>Of <b data-draw="val" data-source="fire_stats" data-row="0" data-field="fires" data-fmt="int">—</b> training fires, <b data-draw="val" data-source="fire_stats" data-row="0" data-field="hits" data-fmt="int">—</b> reached a zone. All of them started within <b data-draw="val" data-source="fire_stats" data-row="0" data-field="farthest_hit_km" data-fmt="1">—</b> km; every other fire was at least <b data-draw="val" data-source="fire_stats" data-row="0" data-field="closest_nohit_km" data-fmt="1">—</b> km away.</p>
+    <div class="legend"><span><i class="sw hit"></i>Reached a zone</span><span><i class="sw nohit"></i>Did not</span><span>Dashed line: 5 km</span></div>
+    <div class="chart" data-draw="strip" data-source="fires" id="chart-strip"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card" id="timing">
+      <span class="eyebrow">When</span>
+      <h2>Fires that hit, hit early</h2>
+      <p class="muted">Training fires that had reached a zone by each time limit.</p>
+      <div class="chart" data-draw="timing" data-source="label_counts" id="chart-timing"></div>
+    </section>
+
+    <section class="card" id="score-parts">
+      <span class="eyebrow">How good</span>
+      <h2>Errors are largest at 12 and 24 hours</h2>
+      <p class="muted">Brier score (error of the risk %) on test fires at each time limit. The Hybrid score weights 24 h 30%, 48 h 40% and 72 h 30%.</p>
+      <div class="chart" data-draw="brier" data-source="test_scores" id="chart-brier"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="card" id="models">
+      <span class="eyebrow">Model choice</span>
+      <h2>Tree models beat a simple guess by a wide margin</h2>
+      <p class="muted">Hybrid score, 5-fold cross-validation on the training fires.</p>
+      <div class="chart" data-draw="models" data-source="model_cv" id="chart-models"></div>
+    </section>
+
+    <section class="card" id="calibration">
+      <span class="eyebrow">Trust</span>
+      <h2>Predicted risk matches what really happened</h2>
+      <p class="muted">Predicted risk vs. the share of test fires that really hit. Points near the dashed line mean the % is honest.</p>
+      <div class="chart" data-draw="calibration" data-source="calibration" id="chart-calibration"></div>
+    </section>
+  </div>
+
+  <section class="card" id="forecast">
+    <span class="eyebrow">Forecast</span>
+    <h2>Risk for every new fire</h2>
+    <p class="muted">The competition test fires have no known outcome. Sorted by 48 hour risk; filter by band.</p>
+    <div class="tools">
+      <label class="muted" for="band-filter">Band</label>
+      <select class="dash-select" id="band-filter" aria-label="Filter by risk band">
+        <option value="">All bands</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+    <div class="tablewrap">
+      <table data-source="new_fires" data-row-key="event_id" aria-label="Predicted risk for new fires">
+        <thead><tr><th data-field="event_id">Fire</th><th data-field="distance_km">Distance (km)</th><th data-field="risk_12h">12 h %</th><th data-field="risk_24h">24 h %</th><th data-field="risk_48h">48 h %</th><th data-field="band">Band</th></tr></thead>
+        <tbody data-draw="fire-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card" id="importance">
+      <span class="eyebrow">What drives it</span>
+      <h2>The model relies almost only on distance</h2>
+      <p class="muted">Drop in the test Hybrid score when one feature is shuffled.</p>
+      <div class="chart" data-draw="importance" data-source="importance" id="chart-importance"></div>
+    </section>
+
+    <section class="card" id="limits">
+      <span class="eyebrow">Read with care</span>
+      <h2>Limitations</h2>
+      <ul>
+        <li>Small data: <span data-draw="val" data-source="fire_stats" data-row="0" data-field="fires" data-fmt="int">—</span> fires in total, so every score has some uncertainty.</li>
+        <li>Weaker at predicting <em>when</em> a fire hits than <em>whether</em> it does.</li>
+        <li>The 72 hour risk is about 98% for every fire, a side effect of the scoring rule. Use 12, 24 and 48 hours for decisions.</li>
+        <li>No weather, wind or terrain data yet. Adding it is the best next step.</li>
+      </ul>
+      <details id="glossary">
+        <summary>What the scores mean</summary>
+        <ul>
+          <li><b>Hybrid score</b>: 0.3 × C-index + 0.7 × (1 − weighted Brier). Higher is better.</li>
+          <li><b>C-index</b>: how often the more urgent of two fires is ranked first.</li>
+          <li><b>Brier score</b>: average squared gap between predicted chance and what happened (0 is perfect).</li>
+          <li><b>Cross-validation</b>: the training fires are split into 5 parts; each part is scored by a model trained on the other 4.</li>
+        </ul>
+      </details>
+    </section>
+  </div>
+</div>
+
+<script>
+  // ---------- calculated figures (same as the current dashboard) ----------
+  dash.calc('fire_stats', {
+    inputs: ['fires'],
+    title: 'Training fire summary',
+    description: 'Counts and distance limits over all training fires.',
+    fn: (fires) => {
+      const hits = fires.filter((f) => +f.hit === 1);
+      const misses = fires.filter((f) => +f.hit === 0);
+      return [{
+        fires: fires.length,
+        hits: hits.length,
+        hit_rate_pct: fires.length ? Math.round((100 * hits.length) / fires.length) : null,
+        farthest_hit_km: d3.max(hits, (f) => +f.distance_km),
+        closest_nohit_km: d3.min(misses, (f) => +f.distance_km),
+      }];
+    },
+  });
+  dash.calc('lift', {
+    inputs: ['model_cv'],
+    title: 'Gain over the baseline',
+    description: 'Tuned Random Forest Hybrid score minus the baseline score (cross-validation).',
+    fn: (models) => {
+      const get = (name) => +(models.find((m) => m.model === name) || {}).hybrid;
+      const baseline = get('Baseline (average)');
+      const tuned = get('Random Forest (tuned)');
+      return [{ baseline, tuned, gain: tuned - baseline }];
+    },
+  });
+  dash.calc('band_counts', {
+    inputs: ['new_fires'],
+    title: 'New fires per 48 h risk band',
+    description: 'Competition test fires counted by their 48 hour risk band.',
+    fn: (newFires) => ['Low', 'Medium', 'High', 'Critical']
+      .map((band) => ({ band, fires: newFires.filter((f) => f.band === band).length }))
+      .concat([{ band: 'All', fires: newFires.length }]),
+  });
+
+  // ---------- helpers ----------
+  window.wr = {
+    band: '',
+    fmt(v, how) {
+      if (v === null || v === undefined || Number.isNaN(+v)) return '—';
+      if (how === 'pct0') return Math.round(+v * 100) + '%';
+      if (how === 'int') return d3.format(',')(Math.round(+v));
+      if (how === '1') return (+v).toFixed(1);
+      return (+v).toFixed(3);
+    },
+    row(src, el) {
+      const d = dash.data(src);
+      if (d.status !== 'ok' || !Array.isArray(d.data)) return null;
+      if (el.dataset.where) {
+        const [k, v] = el.dataset.where.split('=');
+        return d.data.find((r) => String(r[decodeURIComponent(k)]) === decodeURIComponent(v)) || null;
+      }
+      return d.data[+(el.dataset.row || 0)] || null;
+    },
+    rows(el, src) {
+      const d = dash.data(src);
+      if (d.status === 'ok' && Array.isArray(d.data) && d.data.length) { el.classList.remove('dash-skeleton'); return d.data; }
+      if (d.status === 'loading' || d.status === 'connect') { el.replaceChildren(); el.classList.add('dash-skeleton'); return null; }
+      el.classList.remove('dash-skeleton');
+      const p = document.createElement('div'); p.className = 'fail'; p.textContent = 'Failed to load';
+      el.replaceChildren(p);
+      return null;
+    },
+    tip(el) {
+      return {
+        show(ev, lines) {
+          let t = el.querySelector(':scope > .tip');
+          if (!t) { t = document.createElement('div'); t.className = 'tip'; el.appendChild(t); }
+          t.replaceChildren(...lines.map((s) => { const d = document.createElement('div'); d.textContent = s; return d; }));
+          t.hidden = false;
+          const box = el.getBoundingClientRect();
+          let x = ev.clientX - box.left + 12;
+          if (x + t.offsetWidth > box.width) x = ev.clientX - box.left - t.offsetWidth - 12;
+          t.style.left = Math.max(0, x) + 'px'; t.style.top = ev.clientY - box.top + 12 + 'px';
+        },
+        hide() { const t = el.querySelector(':scope > .tip'); if (t) t.hidden = true; },
+      };
+    },
+    svg(el, h, label) {
+      return d3.select(el).append('svg').attr('viewBox', `0 0 ${Math.max(el.clientWidth, 280)} ${h}`).attr('height', h).attr('role', 'img').attr('aria-label', label);
+    },
+    labelWidth(svg, texts) {
+      const probe = svg.append('text');
+      const w = d3.max(texts, (s) => { probe.text(s); return probe.node().getComputedTextLength(); }) || 0;
+      probe.remove();
+      return w;
+    },
+  };
+
+  // The band filter only listens, then redraws the table.
+  for (const sel of document.querySelectorAll('#band-filter')) sel.onchange = () => { wr.band = sel.value; dash.draw('fire-table'); };
+
+  // ---------- single values ----------
+  dash.draw('val', (el) => {
+    const d = dash.data(el.dataset.source);
+    if (d.status === 'loading') { el.textContent = ''; el.classList.add('dash-skeleton'); return; }
+    el.classList.remove('dash-skeleton');
+    const r = wr.row(el.dataset.source, el);
+    el.textContent = r ? wr.fmt(r[el.dataset.field], el.dataset.fmt) : '—';
+  });
+</script>
+
+<script>
+  // ---------- Distance strip: one lane per outcome ----------
+  dash.draw('strip', (el) => {
+    const rows = wr.rows(el, 'fires'); if (!rows) return;
+    el.replaceChildren();
+    const W = Math.max(el.clientWidth, 280), H = 190, m = { t: 10, r: 14, b: 32, l: 0 };
+    const svg = wr.svg(el, H, 'Strip plot of distance to the evacuation zone for fires that hit and fires that did not; the two groups split at about 5 km.');
+    const lanes = [['Reached a zone', 1], ['Did not', 0]];
+    m.l = wr.labelWidth(svg, lanes.map((l) => l[0])) + 12;
+    const x = d3.scaleLog().domain([0.05, d3.max(rows, (r) => +r.distance_km) * 1.2]).range([m.l, W - m.r]);
+    const y = d3.scaleBand().domain(lanes.map((l) => l[0])).range([m.t, H - m.b]).padding(0.25);
+    const xt = W < 520 ? [0.1, 1, 10, 100] : [0.1, 1, 5, 10, 100, 500];
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickValues(xt).tickSize(-(H - m.b - m.t)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickValues(xt).tickFormat((d) => d + ' km'));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).tickSize(0)).call((g) => g.select('.domain').remove());
+    svg.append('line').attr('x1', x(5)).attr('x2', x(5)).attr('y1', m.t).attr('y2', H - m.b).style('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4').attr('stroke-width', 1.5);
+    // a fixed jitter per fire so the dots don't sit on one line
+    const jit = (id) => ((d3.sum(String(id), (c) => c.charCodeAt(0)) * 9301 + 49297) % 233280) / 233280 - 0.5;
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('circle').data(rows).join('circle')
+      .attr('cx', (r) => x(Math.max(+r.distance_km, 0.05)))
+      .attr('cy', (r) => { const lane = +r.hit === 1 ? lanes[0][0] : lanes[1][0]; return y(lane) + y.bandwidth() / 2 + jit(r.event_id) * y.bandwidth() * 0.8; })
+      .attr('r', 4).style('fill', (r) => (+r.hit === 1 ? 'var(--cds-chart-status-critical)' : 'var(--cds-chart-muted)')).style('fill-opacity', 0.8)
+      .on('pointermove', (ev, r) => tip.show(ev, [`Fire ${r.event_id}`, `${(+r.distance_km).toFixed(1)} km from a zone`, +r.hit === 1 ? `Hit after ${(+r.hours).toFixed(1)} h` : 'No hit']))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // ---------- Timing: hits reached by each limit ----------
+  dash.draw('timing', (el) => {
+    const rows = wr.rows(el, 'label_counts'); if (!rows) return;
+    el.replaceChildren();
+    const W = Math.max(el.clientWidth, 280), H = 220, m = { t: 22, r: 18, b: 30, l: 36 };
+    const svg = wr.svg(el, H, 'Line of how many fires had hit by 12, 24, 48 and 72 hours; it rises steeply then flattens.');
+    const x = d3.scalePoint().domain(rows.map((r) => r.horizon)).range([m.l, W - m.r]).padding(0.3);
+    const y = d3.scaleLinear().domain([0, d3.max(rows, (r) => +r.hit) * 1.1]).nice().range([H - m.b, m.t]);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickFormat((d) => 'by ' + d));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4));
+    svg.append('path').datum(rows).attr('d', d3.line().x((r) => x(r.horizon)).y((r) => y(+r.hit))).style('fill', 'none').style('stroke', dash.colors[0]).attr('stroke-width', 2.5);
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('circle').data(rows).join('circle').attr('cx', (r) => x(r.horizon)).attr('cy', (r) => y(+r.hit)).attr('r', 5).style('fill', dash.colors[0])
+      .on('pointermove', (ev, r) => tip.show(ev, [`By ${r.horizon}`, `${r.hit} fires had hit`])).on('pointerleave', () => tip.hide());
+    svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'val').attr('text-anchor', 'middle').attr('x', (r) => x(r.horizon)).attr('y', (r) => y(+r.hit) - 10).text((r) => r.hit);
+  });
+
+  // ---------- Brier per horizon ----------
+  dash.draw('brier', (el) => {
+    const rows = wr.rows(el, 'test_scores'); if (!rows) return;
+    el.replaceChildren();
+    const data = ['12h', '24h', '48h', '72h'].map((h) => ({ h, row: rows.find((r) => r.metric === 'brier_' + h) })).filter((d) => d.row);
+    const W = Math.max(el.clientWidth, 280), H = 220, m = { t: 22, r: 10, b: 30, l: 40 };
+    const svg = wr.svg(el, H, 'Columns of Brier error at 12, 24, 48 and 72 hours; highest at 12 hours.');
+    const x = d3.scaleBand().domain(data.map((d) => d.h)).range([m.l, W - m.r]).padding(0.35);
+    const y = d3.scaleLinear().domain([0, d3.max(data, (d) => +d.row.value) * 1.15 || 0.1]).nice().range([H - m.b, m.t]);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickFormat((d) => d.replace('h', ' h')));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(d3.format('.2f')));
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('rect').data(data).join('rect').attr('x', (d) => x(d.h)).attr('width', x.bandwidth())
+      .attr('y', (d) => y(+d.row.value)).attr('height', (d) => Math.max(1, y(0) - y(+d.row.value)))
+      .style('fill', (d) => (d.h === '12h' || d.h === '24h' ? dash.colors[0] : 'var(--cds-chart-muted)'))
+      .on('pointermove', (ev, d) => tip.show(ev, [`${d.h.replace('h', ' h')} horizon`, `Brier ${(+d.row.value).toFixed(4)}`])).on('pointerleave', () => tip.hide());
+    svg.append('g').selectAll('text').data(data).join('text').attr('class', 'val').attr('text-anchor', 'middle')
+      .attr('x', (d) => x(d.h) + x.bandwidth() / 2).attr('y', (d) => y(+d.row.value) - 5).text((d) => (+d.row.value).toFixed(3));
+  });
+
+  // ---------- Models: dot plot on a zoomed scale ----------
+  dash.draw('models', (el) => {
+    const rows = wr.rows(el, 'model_cv'); if (!rows) return;
+    el.replaceChildren();
+    const data = rows.slice().sort((a, b) => +b.hybrid - +a.hybrid);
+    const W = Math.max(el.clientWidth, 280), H = 220, m = { t: 6, r: 44, b: 30, l: 0 };
+    const svg = wr.svg(el, H, 'Dot plot of cross-validated Hybrid score per model; tuned Random Forest is highest, the baseline far lower.');
+    m.l = wr.labelWidth(svg, data.map((r) => r.model)) + 12;
+    const lo = Math.floor((d3.min(data, (r) => +r.hybrid) - 0.03) * 20) / 20;
+    const x = d3.scaleLinear().domain([lo, 1]).range([m.l, W - m.r]);
+    const y = d3.scaleBand().domain(data.map((r) => r.model)).range([m.t, H - m.b]).padding(0.4);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(4).tickSize(-(H - m.b - m.t)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(W < 420 ? 3 : 5).tickFormat(d3.format('.2f')));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).tickSize(0)).call((g) => g.select('.domain').remove());
+    const tip = wr.tip(el);
+    const g = svg.append('g').selectAll('g').data(data).join('g');
+    g.append('line').attr('x1', x(lo)).attr('x2', (r) => x(+r.hybrid)).attr('y1', (r) => y(r.model) + y.bandwidth() / 2).attr('y2', (r) => y(r.model) + y.bandwidth() / 2).style('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 2);
+    g.append('circle').attr('cx', (r) => x(+r.hybrid)).attr('cy', (r) => y(r.model) + y.bandwidth() / 2).attr('r', 6)
+      .style('fill', (r) => (r.model === 'Random Forest (tuned)' ? dash.colors[0] : 'var(--cds-chart-muted)'))
+      .on('pointermove', (ev, r) => tip.show(ev, [r.model, `Hybrid score ${(+r.hybrid).toFixed(3)}`])).on('pointerleave', () => tip.hide());
+    g.append('text').attr('class', 'val').attr('x', (r) => x(+r.hybrid) + 10).attr('y', (r) => y(r.model) + y.bandwidth() / 2).attr('dy', '0.35em').text((r) => (+r.hybrid).toFixed(3));
+  });
+
+  // ---------- Calibration ----------
+  dash.draw('calibration', (el) => {
+    const rows = wr.rows(el, 'calibration'); if (!rows) return;
+    el.replaceChildren();
+    const W = Math.max(el.clientWidth, 280), H = 260, m = { t: 24, r: 14, b: 30, l: 40 };
+    const svg = wr.svg(el, H, 'Calibration chart: predicted risk against real hit rate for 12, 24 and 48 hours, close to the diagonal.');
+    const x = d3.scaleLinear().domain([0, 100]).range([m.l, W - m.r]);
+    const y = d3.scaleLinear().domain([0, 100]).range([H - m.b, m.t]);
+    svg.append('g').attr('class', 'grid').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(5).tickFormat((d) => d + '%'));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(5).tickFormat((d) => d + '%'));
+    svg.append('line').attr('x1', x(0)).attr('y1', y(0)).attr('x2', x(100)).attr('y2', y(100)).style('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+    const tip = wr.tip(el);
+    d3.groups(rows, (r) => r.horizon).forEach(([h, pts], i) => {
+      const c = dash.colors[i % dash.colors.length];
+      svg.append('path').datum(pts).attr('d', d3.line().x((r) => x(+r.predicted_pct)).y((r) => y(+r.real_pct))).style('fill', 'none').style('stroke', c).attr('stroke-width', 2);
+      svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (r) => x(+r.predicted_pct)).attr('cy', (r) => y(+r.real_pct)).attr('r', 4.5).style('fill', c)
+        .on('pointermove', (ev, r) => tip.show(ev, [`${h} horizon`, `Predicted ${(+r.predicted_pct).toFixed(1)}%`, `Really hit ${(+r.real_pct).toFixed(1)}%`])).on('pointerleave', () => tip.hide());
+      const lg = svg.append('g').attr('transform', `translate(${m.l + i * 60},10)`);
+      lg.append('circle').attr('r', 5).attr('cx', 5).attr('cy', -4).style('fill', c);
+      lg.append('text').attr('x', 14).text(h);
+    });
+  });
+
+  // ---------- Importance ----------
+  dash.draw('importance', (el) => {
+    const rows = wr.rows(el, 'importance'); if (!rows) return;
+    el.replaceChildren();
+    const data = rows.slice().sort((a, b) => +b.importance - +a.importance);
+    const W = Math.max(el.clientWidth, 280), H = 200, m = { t: 6, r: 48, b: 28, l: 0 };
+    const svg = wr.svg(el, H, 'Bar chart of feature importance; distance to the evacuation zone dominates.');
+    m.l = wr.labelWidth(svg, data.map((r) => r.feature)) + 10;
+    const x = d3.scaleLinear().domain([0, d3.max(data, (r) => +r.importance) || 1]).nice().range([m.l, W - m.r]);
+    const y = d3.scaleBand().domain(data.map((r) => r.feature)).range([m.t, H - m.b]).padding(0.3);
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).ticks(W < 420 ? 2 : 4));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).tickSize(0)).call((g) => g.select('.domain').remove());
+    const tip = wr.tip(el);
+    svg.append('g').selectAll('rect').data(data).join('rect').attr('x', x(0)).attr('y', (r) => y(r.feature)).attr('height', y.bandwidth())
+      .attr('width', (r) => Math.max(1, x(+r.importance) - x(0))).style('fill', (r, i) => (i === 0 ? dash.colors[0] : 'var(--cds-chart-muted)'))
+      .on('pointermove', (ev, r) => tip.show(ev, [r.feature, `Score drop ${(+r.importance).toFixed(4)}`])).on('pointerleave', () => tip.hide());
+    svg.append('g').selectAll('text').data(data).join('text').attr('class', 'val').attr('x', (r) => x(+r.importance) + 4).attr('y', (r) => y(r.feature) + y.bandwidth() / 2).attr('dy', '0.35em').text((r) => (+r.importance).toFixed(3));
+  });
+
+  // ---------- Forecast table ----------
+  dash.draw('fire-table', (tb) => {
+    const d = dash.data('new_fires');
+    if (d.status !== 'ok') { tb.replaceChildren(); return; }
+    const rows = d.data.filter((r) => !wr.band || r.band === wr.band).sort((a, b) => +b.risk_48h - +a.risk_48h || +a.distance_km - +b.distance_km);
+    tb.replaceChildren(...rows.map((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = encodeURIComponent(r.event_id);
+      [r.event_id, (+r.distance_km).toFixed(1), (+r.risk_12h).toFixed(1), (+r.risk_24h).toFixed(1)].forEach((v) => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      const td48 = document.createElement('td');
+      const num = document.createElement('span'); num.textContent = (+r.risk_48h).toFixed(1);
+      const meter = document.createElement('span'); meter.className = 'meter'; meter.setAttribute('aria-hidden', 'true');
+      const fill = document.createElement('i'); fill.style.width = Math.max(0, Math.min(100, +r.risk_48h)) + '%'; meter.appendChild(fill);
+      td48.append(num, meter); tr.appendChild(td48);
+      const tdb = document.createElement('td'); const s = document.createElement('span'); s.className = 'pill ' + r.band; s.textContent = r.band; tdb.appendChild(s); tr.appendChild(tdb);
+      return tr;
+    }));
+  });
+</script>
+<p class="footer">Built from the fire-risk-model project (src/build_dashboard_html.py). Model results from the WiDS Global Datathon 2026 data.</p>
+</div>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  dash._drawAll();
+  let w = window.innerWidth;
+  window.addEventListener('resize', () => { if (Math.abs(window.innerWidth - w) > 20) { w = window.innerWidth; dash._drawAll(); } });
+});
+</script>
+</body>
+</html>

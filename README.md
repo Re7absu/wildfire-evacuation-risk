@@ -118,7 +118,17 @@ The output contains your columns plus:
 
 To also create the competition file, add `--submission reports/submission.csv`.
 
-## 9. Limitations
+## 9. Results dashboard
+
+Open **`reports/dashboard.html`** in any browser (double-click it). It shows the key results for stakeholders: scorecard, charts, and a filterable table of risk for every new fire. It needs internet once, to load the chart library.
+
+To rebuild it after retraining the model:
+```bash
+uv run python src/export_results.py        # recompute the numbers
+uv run python src/build_dashboard_html.py  # write reports/dashboard.html
+```
+
+## 10. Limitations
 
 - Only 221 fires in total.
 - The model depends almost only on distance.
