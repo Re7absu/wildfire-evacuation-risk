@@ -13,12 +13,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+# Input page, data folder, output file, and the data files the page reads.
 ROOT = Path(__file__).resolve().parents[1]
 SRC_PAGE = ROOT / "reports" / "dashboard" / "dashboard_v2" / "index.html"
 DATA_DIR = ROOT / "reports" / "dashboard"
 OUT = ROOT / "reports" / "dashboard.html"
 DATASETS = ["label_counts", "fires", "model_cv", "test_scores", "calibration", "importance", "new_fires"]
 
+# Colors, fonts and spacing the page expects, for light mode and dark mode.
 THEME = """
 :root {
   --color-fg: #1d2330; --color-fg-muted: #5d6676; --color-bg: #f6f7f9; --color-panel: #ffffff; --color-border-line: #e2e5ea;
@@ -75,6 +77,7 @@ window.dash = (() => {
 })();
 """
 
+# Draw every chart once the page has loaded, and again when the window width changes.
 START = """
 window.addEventListener('DOMContentLoaded', () => {
   dash._drawAll();
@@ -84,11 +87,14 @@ window.addEventListener('DOMContentLoaded', () => {
 """
 
 
+# Combine theme + data + helper + page into one HTML file and save it.
 def main() -> None:
     """Assemble the standalone page."""
-    data = {name: json.loads((DATA_DIR / f"{name}.json").read_text(encoding="utf-8"))["rows"] for name in DATASETS}
+    # Read the data rows and the page; make the data safe to place inside a <script> tag.
+    data ={name: json.loads((DATA_DIR / f"{name}.json").read_text(encoding="utf-8"))["rows"] for name in DATASETS}
     page = SRC_PAGE.read_text(encoding="utf-8").replace('<meta name="dash-one-writer">', "").strip()
     data_js = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
+    # The finished page: theme and helper in <head>, the dashboard in <body>.
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -113,5 +119,6 @@ def main() -> None:
     print(f"Wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size // 1024} KB)")
 
 
+# Run main() only when this file is run directly (not when imported).
 if __name__ == "__main__":
     main()

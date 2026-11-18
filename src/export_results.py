@@ -22,6 +22,7 @@ from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
 
+# Let this script import the project's own code (src/...) and hide noisy library warnings.
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 warnings.filterwarnings("ignore")
@@ -29,10 +30,12 @@ warnings.filterwarnings("ignore")
 from src.data import HORIZONS, TARGET_COLS, TIME_COL, EVENT_COL, feature_columns, make_labels  # noqa: E402
 from src.model import MultiHorizonModel, hybrid_scorer, make_pipeline, risk_band, score  # noqa: E402
 
+# Output folder, and this script's own text (saved with each file so readers can see how numbers were made).
 OUT = ROOT / "reports" / "dashboard"
 CODE = Path(__file__).read_text(encoding="utf-8")
 
 
+# Write one dashboard data file as JSON: the rows plus where they came from.
 def save(name: str, rows: list[dict], made_from: str) -> None:
     """Write one dataset with the code that made it."""
     meta = [{"label": "export_results.py", "value": CODE, "type": "code", "lang": "python"},
@@ -41,8 +44,10 @@ def save(name: str, rows: list[dict], made_from: str) -> None:
     print("wrote", name, len(rows), "rows")
 
 
+# Compute every number the dashboard shows and save each group as its own file.
 def main() -> None:
     """Compute every number the dashboard shows."""
+    # Load the cleaned data, the held-out test split and the saved model.
     OUT.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(ROOT / "data" / "processed" / "train_clean.csv")
     test = pd.read_csv(ROOT / "data" / "test" / "test_set.csv")
@@ -107,5 +112,6 @@ def main() -> None:
          "data/raw/test.csv, models/fire_risk_model.joblib")
 
 
+# Run main() only when this file is run directly (not when imported).
 if __name__ == "__main__":
     main()
