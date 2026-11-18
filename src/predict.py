@@ -27,7 +27,7 @@ MODEL_PATH = ROOT / "models" / "fire_risk_model.joblib"
 
 # Add risk columns to a table of fires using the saved model.
 def predict(df: pd.DataFrame, bundle: dict) -> pd.DataFrame:
-    """Return df plus risk % per horizon, risk_percentage (48 h) and risk_band."""
+    """Return df plus risk % per horizon, predicted hours to hit, risk_percentage (48 h) and risk_band."""
     # Stop early with a clear message if any required column is missing.
     missing = [c for c in bundle["features"] if c not in df.columns]
     if missing:
@@ -37,6 +37,9 @@ def predict(df: pd.DataFrame, bundle: dict) -> pd.DataFrame:
     X = out[bundle["features"]].replace([float("inf"), float("-inf")], float("nan"))
     risk = bundle["model"].predict_risk(X).round(2)
     out = pd.concat([out, risk], axis=1)
+    # Survival models also give the predicted hours until the fire reaches the zone (empty = not expected).
+    if hasattr(bundle["model"], "predict_time"):
+        out["predicted_hours_to_hit"] = pd.Series(bundle["model"].predict_time(X)).round(1)
     # Main risk shown to users = the 48 h risk, plus its Low/Medium/High/Critical band.
     out["risk_percentage"] = out[f"risk_{MAIN_HORIZON}h_pct"]
     out["risk_band"] = risk_band(out["risk_percentage"]).astype(str)
@@ -71,7 +74,7 @@ def main() -> None:
         print(f"Saved submission to {args.submission}")
 
     # Show a short summary in the terminal.
-    print(pred[[c for c in (ID_COL, "risk_percentage", "risk_band") if c in pred]].to_string(index=False))
+    print(pred[[c for c in (ID_COL, "predicted_hours_to_hit", "risk_percentage", "risk_band") if c in pred]].to_string(index=False))
 
 
 # Run main() only when this file is run directly (not when imported).

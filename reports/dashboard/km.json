@@ -1,0 +1,2106 @@
+{
+ "rows": [
+  {
+   "group": "All fires",
+   "hours": 0.0,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "All fires",
+   "hours": 0.0,
+   "pct_hit": 0.45
+  },
+  {
+   "group": "All fires",
+   "hours": 0.01,
+   "pct_hit": 0.9
+  },
+  {
+   "group": "All fires",
+   "hours": 0.06,
+   "pct_hit": 1.36
+  },
+  {
+   "group": "All fires",
+   "hours": 0.13,
+   "pct_hit": 1.81
+  },
+  {
+   "group": "All fires",
+   "hours": 0.13,
+   "pct_hit": 2.26
+  },
+  {
+   "group": "All fires",
+   "hours": 0.29,
+   "pct_hit": 2.71
+  },
+  {
+   "group": "All fires",
+   "hours": 0.37,
+   "pct_hit": 2.71
+  },
+  {
+   "group": "All fires",
+   "hours": 0.38,
+   "pct_hit": 3.17
+  },
+  {
+   "group": "All fires",
+   "hours": 0.41,
+   "pct_hit": 3.62
+  },
+  {
+   "group": "All fires",
+   "hours": 0.51,
+   "pct_hit": 4.08
+  },
+  {
+   "group": "All fires",
+   "hours": 0.51,
+   "pct_hit": 4.53
+  },
+  {
+   "group": "All fires",
+   "hours": 0.52,
+   "pct_hit": 4.99
+  },
+  {
+   "group": "All fires",
+   "hours": 0.54,
+   "pct_hit": 5.44
+  },
+  {
+   "group": "All fires",
+   "hours": 0.55,
+   "pct_hit": 5.9
+  },
+  {
+   "group": "All fires",
+   "hours": 0.58,
+   "pct_hit": 6.35
+  },
+  {
+   "group": "All fires",
+   "hours": 0.62,
+   "pct_hit": 6.35
+  },
+  {
+   "group": "All fires",
+   "hours": 0.72,
+   "pct_hit": 6.81
+  },
+  {
+   "group": "All fires",
+   "hours": 0.74,
+   "pct_hit": 7.27
+  },
+  {
+   "group": "All fires",
+   "hours": 0.87,
+   "pct_hit": 7.72
+  },
+  {
+   "group": "All fires",
+   "hours": 0.89,
+   "pct_hit": 8.18
+  },
+  {
+   "group": "All fires",
+   "hours": 1.26,
+   "pct_hit": 8.64
+  },
+  {
+   "group": "All fires",
+   "hours": 1.29,
+   "pct_hit": 8.64
+  },
+  {
+   "group": "All fires",
+   "hours": 1.4,
+   "pct_hit": 9.09
+  },
+  {
+   "group": "All fires",
+   "hours": 1.47,
+   "pct_hit": 9.55
+  },
+  {
+   "group": "All fires",
+   "hours": 1.48,
+   "pct_hit": 10.01
+  },
+  {
+   "group": "All fires",
+   "hours": 1.58,
+   "pct_hit": 10.47
+  },
+  {
+   "group": "All fires",
+   "hours": 1.94,
+   "pct_hit": 10.93
+  },
+  {
+   "group": "All fires",
+   "hours": 1.99,
+   "pct_hit": 11.39
+  },
+  {
+   "group": "All fires",
+   "hours": 2.06,
+   "pct_hit": 11.85
+  },
+  {
+   "group": "All fires",
+   "hours": 2.48,
+   "pct_hit": 11.85
+  },
+  {
+   "group": "All fires",
+   "hours": 2.56,
+   "pct_hit": 12.31
+  },
+  {
+   "group": "All fires",
+   "hours": 2.66,
+   "pct_hit": 12.77
+  },
+  {
+   "group": "All fires",
+   "hours": 2.98,
+   "pct_hit": 13.23
+  },
+  {
+   "group": "All fires",
+   "hours": 3.21,
+   "pct_hit": 13.7
+  },
+  {
+   "group": "All fires",
+   "hours": 3.21,
+   "pct_hit": 14.16
+  },
+  {
+   "group": "All fires",
+   "hours": 3.27,
+   "pct_hit": 14.62
+  },
+  {
+   "group": "All fires",
+   "hours": 3.32,
+   "pct_hit": 15.08
+  },
+  {
+   "group": "All fires",
+   "hours": 3.36,
+   "pct_hit": 15.54
+  },
+  {
+   "group": "All fires",
+   "hours": 3.53,
+   "pct_hit": 16.0
+  },
+  {
+   "group": "All fires",
+   "hours": 3.67,
+   "pct_hit": 16.46
+  },
+  {
+   "group": "All fires",
+   "hours": 3.71,
+   "pct_hit": 16.93
+  },
+  {
+   "group": "All fires",
+   "hours": 3.79,
+   "pct_hit": 17.39
+  },
+  {
+   "group": "All fires",
+   "hours": 4.44,
+   "pct_hit": 17.85
+  },
+  {
+   "group": "All fires",
+   "hours": 4.46,
+   "pct_hit": 18.31
+  },
+  {
+   "group": "All fires",
+   "hours": 5.46,
+   "pct_hit": 18.77
+  },
+  {
+   "group": "All fires",
+   "hours": 5.47,
+   "pct_hit": 19.23
+  },
+  {
+   "group": "All fires",
+   "hours": 5.69,
+   "pct_hit": 19.7
+  },
+  {
+   "group": "All fires",
+   "hours": 5.82,
+   "pct_hit": 20.16
+  },
+  {
+   "group": "All fires",
+   "hours": 7.49,
+   "pct_hit": 20.62
+  },
+  {
+   "group": "All fires",
+   "hours": 7.61,
+   "pct_hit": 21.08
+  },
+  {
+   "group": "All fires",
+   "hours": 8.17,
+   "pct_hit": 21.54
+  },
+  {
+   "group": "All fires",
+   "hours": 9.4,
+   "pct_hit": 21.54
+  },
+  {
+   "group": "All fires",
+   "hours": 10.91,
+   "pct_hit": 22.01
+  },
+  {
+   "group": "All fires",
+   "hours": 11.25,
+   "pct_hit": 22.01
+  },
+  {
+   "group": "All fires",
+   "hours": 11.83,
+   "pct_hit": 22.47
+  },
+  {
+   "group": "All fires",
+   "hours": 12.24,
+   "pct_hit": 22.47
+  },
+  {
+   "group": "All fires",
+   "hours": 12.82,
+   "pct_hit": 22.47
+  },
+  {
+   "group": "All fires",
+   "hours": 13.11,
+   "pct_hit": 22.95
+  },
+  {
+   "group": "All fires",
+   "hours": 13.66,
+   "pct_hit": 23.42
+  },
+  {
+   "group": "All fires",
+   "hours": 14.32,
+   "pct_hit": 23.89
+  },
+  {
+   "group": "All fires",
+   "hours": 14.47,
+   "pct_hit": 24.36
+  },
+  {
+   "group": "All fires",
+   "hours": 14.67,
+   "pct_hit": 24.36
+  },
+  {
+   "group": "All fires",
+   "hours": 14.73,
+   "pct_hit": 24.84
+  },
+  {
+   "group": "All fires",
+   "hours": 14.84,
+   "pct_hit": 25.32
+  },
+  {
+   "group": "All fires",
+   "hours": 14.85,
+   "pct_hit": 25.79
+  },
+  {
+   "group": "All fires",
+   "hours": 14.98,
+   "pct_hit": 25.79
+  },
+  {
+   "group": "All fires",
+   "hours": 15.15,
+   "pct_hit": 25.79
+  },
+  {
+   "group": "All fires",
+   "hours": 15.7,
+   "pct_hit": 25.79
+  },
+  {
+   "group": "All fires",
+   "hours": 15.92,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 15.95,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 17.64,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 18.28,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 18.71,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 18.8,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 18.81,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 18.89,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 18.92,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 19.16,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 19.21,
+   "pct_hit": 26.28
+  },
+  {
+   "group": "All fires",
+   "hours": 19.56,
+   "pct_hit": 26.8
+  },
+  {
+   "group": "All fires",
+   "hours": 20.46,
+   "pct_hit": 26.8
+  },
+  {
+   "group": "All fires",
+   "hours": 20.87,
+   "pct_hit": 27.32
+  },
+  {
+   "group": "All fires",
+   "hours": 20.96,
+   "pct_hit": 27.32
+  },
+  {
+   "group": "All fires",
+   "hours": 21.07,
+   "pct_hit": 27.32
+  },
+  {
+   "group": "All fires",
+   "hours": 21.53,
+   "pct_hit": 27.85
+  },
+  {
+   "group": "All fires",
+   "hours": 22.05,
+   "pct_hit": 28.38
+  },
+  {
+   "group": "All fires",
+   "hours": 22.98,
+   "pct_hit": 28.91
+  },
+  {
+   "group": "All fires",
+   "hours": 23.84,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 24.17,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 25.42,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 26.39,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 26.53,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 28.61,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 32.57,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 32.81,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 33.39,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 34.53,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 36.17,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 36.96,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 37.02,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 37.39,
+   "pct_hit": 29.44
+  },
+  {
+   "group": "All fires",
+   "hours": 37.62,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 38.44,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 38.53,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 38.64,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 39.27,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 39.91,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 39.92,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 39.96,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 42.31,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 43.11,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 43.36,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 43.82,
+   "pct_hit": 30.03
+  },
+  {
+   "group": "All fires",
+   "hours": 43.85,
+   "pct_hit": 30.68
+  },
+  {
+   "group": "All fires",
+   "hours": 44.01,
+   "pct_hit": 30.68
+  },
+  {
+   "group": "All fires",
+   "hours": 44.03,
+   "pct_hit": 30.68
+  },
+  {
+   "group": "All fires",
+   "hours": 44.99,
+   "pct_hit": 30.68
+  },
+  {
+   "group": "All fires",
+   "hours": 45.34,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 46.53,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 47.0,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 48.0,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 48.93,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 49.55,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 50.52,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 54.55,
+   "pct_hit": 31.34
+  },
+  {
+   "group": "All fires",
+   "hours": 54.64,
+   "pct_hit": 32.06
+  },
+  {
+   "group": "All fires",
+   "hours": 55.07,
+   "pct_hit": 32.06
+  },
+  {
+   "group": "All fires",
+   "hours": 55.17,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 55.46,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 55.57,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 55.82,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 56.88,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 57.09,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 57.64,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 58.41,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 58.53,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 58.94,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 59.22,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 59.77,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 60.07,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 60.31,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 60.73,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 60.95,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 61.07,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 61.27,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 61.31,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 61.37,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 61.48,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 61.8,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.33,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.42,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.53,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.71,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.77,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.82,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.84,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.84,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.86,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.89,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 62.99,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 63.38,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 63.56,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 63.72,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 63.75,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 63.89,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 63.94,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 63.96,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.07,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.18,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.32,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.44,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.45,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.5,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.56,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.57,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.58,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.62,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.78,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 64.78,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.01,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.02,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.08,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.2,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.25,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.33,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.37,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.58,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.62,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.68,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.69,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.7,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.7,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 65.72,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.01,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.03,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.05,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.09,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.13,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.19,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.2,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.27,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.3,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.34,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.4,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.43,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.44,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.45,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.49,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.5,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.57,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.6,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "All fires",
+   "hours": 66.64,
+   "pct_hit": 32.78
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.0,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.0,
+   "pct_hit": 1.45
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.01,
+   "pct_hit": 2.9
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.06,
+   "pct_hit": 4.35
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.13,
+   "pct_hit": 5.8
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.13,
+   "pct_hit": 7.25
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.29,
+   "pct_hit": 8.7
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.38,
+   "pct_hit": 10.14
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.41,
+   "pct_hit": 11.59
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.51,
+   "pct_hit": 13.04
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.51,
+   "pct_hit": 14.49
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.52,
+   "pct_hit": 15.94
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.54,
+   "pct_hit": 17.39
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.55,
+   "pct_hit": 18.84
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.58,
+   "pct_hit": 20.29
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.72,
+   "pct_hit": 21.74
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.74,
+   "pct_hit": 23.19
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.87,
+   "pct_hit": 24.64
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 0.89,
+   "pct_hit": 26.09
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 1.26,
+   "pct_hit": 27.54
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 1.4,
+   "pct_hit": 28.99
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 1.47,
+   "pct_hit": 30.43
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 1.48,
+   "pct_hit": 31.88
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 1.58,
+   "pct_hit": 33.33
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 1.94,
+   "pct_hit": 34.78
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 1.99,
+   "pct_hit": 36.23
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 2.06,
+   "pct_hit": 37.68
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 2.56,
+   "pct_hit": 39.13
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 2.66,
+   "pct_hit": 40.58
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 2.98,
+   "pct_hit": 42.03
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.21,
+   "pct_hit": 43.48
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.21,
+   "pct_hit": 44.93
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.27,
+   "pct_hit": 46.38
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.32,
+   "pct_hit": 47.83
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.36,
+   "pct_hit": 49.28
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.53,
+   "pct_hit": 50.72
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.67,
+   "pct_hit": 52.17
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.71,
+   "pct_hit": 53.62
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 3.79,
+   "pct_hit": 55.07
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 4.44,
+   "pct_hit": 56.52
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 4.46,
+   "pct_hit": 57.97
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 5.46,
+   "pct_hit": 59.42
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 5.47,
+   "pct_hit": 60.87
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 5.69,
+   "pct_hit": 62.32
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 5.82,
+   "pct_hit": 63.77
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 7.49,
+   "pct_hit": 65.22
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 7.61,
+   "pct_hit": 66.67
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 8.17,
+   "pct_hit": 68.12
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 10.91,
+   "pct_hit": 69.57
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 11.83,
+   "pct_hit": 71.01
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 13.11,
+   "pct_hit": 72.46
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 13.66,
+   "pct_hit": 73.91
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 14.32,
+   "pct_hit": 75.36
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 14.47,
+   "pct_hit": 76.81
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 14.73,
+   "pct_hit": 78.26
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 14.84,
+   "pct_hit": 79.71
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 14.85,
+   "pct_hit": 81.16
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 15.92,
+   "pct_hit": 82.61
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 19.56,
+   "pct_hit": 84.06
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 20.87,
+   "pct_hit": 85.51
+  },
+  {
+   "group": "Within 5 km",
+   "hours": 21.53,
+   "pct_hit": 86.96
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 0.0,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 0.37,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 0.62,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 1.29,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 2.48,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 9.4,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 11.25,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 12.24,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 12.82,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 14.67,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 14.98,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 15.15,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 15.7,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 15.95,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 17.64,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 18.28,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 18.71,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 18.8,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 18.81,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 18.89,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 18.92,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 19.16,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 19.21,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 20.46,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 20.96,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 21.07,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 24.17,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 25.42,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 26.39,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 26.53,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 28.61,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 32.57,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 32.81,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 33.39,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 34.53,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 36.17,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 36.96,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 37.02,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 37.39,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 38.44,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 38.53,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 38.64,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 39.27,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 39.91,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 39.92,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 39.96,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 42.31,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 43.11,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 43.36,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 43.82,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 44.01,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 44.03,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 44.99,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 46.53,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 47.0,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 48.0,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 48.93,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 49.55,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 50.52,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 54.55,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 55.07,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 55.46,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 55.57,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 55.82,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 56.88,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 57.09,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 57.64,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 58.41,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 58.53,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 58.94,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 59.22,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 59.77,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 60.07,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 60.31,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 60.73,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 60.95,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 61.07,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 61.27,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 61.31,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 61.37,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 61.48,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 61.8,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.33,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.42,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.53,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.71,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.77,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.82,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.84,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.84,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.86,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.89,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 62.99,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 63.38,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 63.56,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 63.72,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 63.75,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 63.89,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 63.94,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 63.96,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.07,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.18,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.32,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.44,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.45,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.5,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.56,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.57,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.58,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.62,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.78,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 64.78,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.01,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.02,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.08,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.2,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.25,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.33,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.37,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.58,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.62,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.68,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.69,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.7,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.7,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 65.72,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.01,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.03,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.05,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.09,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.13,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.19,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.2,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.27,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.3,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.34,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.4,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.43,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.44,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.45,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.49,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.5,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.57,
+   "pct_hit": 0.0
+  },
+  {
+   "group": "Beyond 5 km",
+   "hours": 66.6,
+   "pct_hit": 0.0
+  }
+ ],
+ "meta": [
+  {
+   "label": "export_results.py",
+   "value": "\"\"\"Export the key results as small JSON files for the results dashboard.\n\nRun from the project folder (after notebooks 01-03):\n    uv run python src/export_results.py\nWrites reports/dashboard/*.json, each as {\"rows\": [...], \"meta\": [...]}.\n\"\"\"\n\nfrom __future__ import annotations\n\nimport json\nimport sys\nimport warnings\nfrom pathlib import Path\n\nimport joblib\nimport numpy as np\nimport pandas as pd\nfrom sklearn.calibration import calibration_curve\nfrom sklearn.inspection import permutation_importance\n\n# Let this script import the project's own code (src/...) and hide noisy library warnings.\nROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT))\nwarnings.filterwarnings(\"ignore\")\n\nfrom src.data import HORIZONS, TARGET_COLS, TIME_COL, EVENT_COL, make_labels  # noqa: E402\nfrom src.model import hybrid_scorer, risk_band, score  # noqa: E402\nfrom src.survival import hit_curve  # noqa: E402\n\n# Output folder, and this script's own text (saved with each file so readers can see how numbers were made).\nOUT = ROOT / \"reports\" / \"dashboard\"\nCODE = Path(__file__).read_text(encoding=\"utf-8\")\n\n\n# Write one dashboard data file as JSON: the rows plus where they came from.\ndef save(name: str, rows: list[dict], made_from: str) -> None:\n    \"\"\"Write one dataset with the code that made it.\"\"\"\n    meta = [{\"label\": \"export_results.py\", \"value\": CODE, \"type\": \"code\", \"lang\": \"python\"},\n            {\"label\": \"Input\", \"value\": made_from}]\n    (OUT / f\"{name}.json\").write_text(json.dumps({\"rows\": rows, \"meta\": meta}, indent=1), encoding=\"utf-8\")\n    print(\"wrote\", name, len(rows), \"rows\")\n\n\n# Compute every number the dashboard shows and save each group as its own file.\ndef main() -> None:\n    \"\"\"Compute every number the dashboard shows.\"\"\"\n    # Load the cleaned data, the held-out test split and the saved model.\n    OUT.mkdir(parents=True, exist_ok=True)\n    df = pd.read_csv(ROOT / \"data\" / \"processed\" / \"train_clean.csv\")\n    test = pd.read_csv(ROOT / \"data\" / \"test\" / \"test_set.csv\")\n    bundle = joblib.load(ROOT / \"models\" / \"fire_risk_model.joblib\")\n    model, features = bundle[\"model\"], bundle[\"features\"]\n\n    # 1. Fires per time limit (all 221 training fires)\n    lab = make_labels(df[TIME_COL], df[EVENT_COL])\n    save(\"label_counts\", [{\"horizon\": f\"{h} h\", \"hit\": int((lab[f\"hit_{h}h\"] == 1).sum()),\n                           \"no_hit\": int((lab[f\"hit_{h}h\"] == 0).sum()), \"skipped\": int(lab[f\"hit_{h}h\"].isna().sum())}\n                          for h in HORIZONS], \"data/processed/train_clean.csv\")\n\n    # 2. Distance vs outcome, one row per fire\n    save(\"fires\", [{\"event_id\": str(r.event_id), \"distance_km\": round(r.dist_min_ci_0_5h / 1000, 3),\n                    \"hours\": round(getattr(r, TIME_COL), 2), \"hit\": int(getattr(r, EVENT_COL))}\n                   for r in df.itertuples()], \"data/processed/train_clean.csv\")\n\n    # 3. Model comparison (5-fold CV), saved with the model by notebook 02\n    rows = [{\"model\": r[\"model\"], \"type\": r[\"type\"], \"hybrid\": r[\"hybrid\"], \"c_index\": r[\"c_index\"],\n             \"brier\": r[\"brier\"], \"final\": bool(r[\"final\"])} for r in bundle[\"cv_table\"]]\n    save(\"model_cv\", rows, \"models/fire_risk_model.joblib (comparison table from notebook 02)\")\n\n    # 3b. Kaplan-Meier curves: share of fires that have hit by each hour (all fires, near vs. far)\n    near = df[\"dist_min_ci_0_5h\"] <= 5000\n    km = []\n    for group_name, mask in [(\"All fires\", np.ones(len(df), bool)), (\"Within 5 km\", near.to_numpy()), (\"Beyond 5 km\", ~near.to_numpy())]:\n        t, p = hit_curve(df.loc[mask, TIME_COL], df.loc[mask, EVENT_COL])\n        km += [{\"group\": group_name, \"hours\": 0.0, \"pct_hit\": 0.0}]\n        km += [{\"group\": group_name, \"hours\": round(float(a), 2), \"pct_hit\": round(float(b) * 100, 2)} for a, b in zip(t, p)]\n    save(\"km\", km, \"data/processed/train_clean.csv\")\n\n    # 4. Scores on the 34 held-out test fires\n    probs = model.predict_proba(test[features])\n    s = score(probs, test[TIME_COL], test[EVENT_COL])\n    save(\"test_scores\", [{\"metric\": k, \"value\": round(float(v), 4)} for k, v in s.items()],\n         \"data/test/test_set.csv, models/fire_risk_model.joblib\")\n\n    # 5. Calibration on the test set (12/24/48 h, 4 bins each)\n    tl = make_labels(test[TIME_COL], test[EVENT_COL])\n    cal = []\n    for k, h in enumerate((12, 24, 48)):\n        known = tl[f\"hit_{h}h\"].notna().to_numpy()\n        real, pred = calibration_curve(tl.loc[known, f\"hit_{h}h\"], probs[known, k], n_bins=4, strategy=\"quantile\")\n        cal += [{\"horizon\": f\"{h} h\", \"predicted_pct\": round(p * 100, 1), \"real_pct\": round(r * 100, 1)} for p, r in zip(pred, real)]\n    save(\"calibration\", cal, \"data/test/test_set.csv, models/fire_risk_model.joblib\")\n\n    # 6. Feature importance (drop in Hybrid score when a feature is shuffled)\n    imp = permutation_importance(model, test[features], test[TARGET_COLS].to_numpy(), scoring=hybrid_scorer,\n                                 n_repeats=10, random_state=42, n_jobs=-1)\n    order = np.argsort(imp.importances_mean)[::-1][:5]\n    save(\"importance\", [{\"feature\": features[i], \"importance\": round(float(imp.importances_mean[i]), 4)} for i in order],\n         \"data/test/test_set.csv, models/fire_risk_model.joblib\")\n\n    # 7. Predictions for the 95 competition fires (no answers known)\n    new = pd.read_csv(ROOT / \"data\" / \"raw\" / \"test.csv\")\n    p = model.predict_proba(new[features]) * 100\n    band = risk_band(p[:, 2]).astype(str)\n    # Predicted hours to hit from the survival model (None = not expected to hit)\n    hours = model.predict_time(new[features]) if hasattr(model, \"predict_time\") else np.full(len(new), np.nan)\n    save(\"new_fires\", [{\"event_id\": str(e), \"distance_km\": round(d / 1000, 2),\n                        \"predicted_hours\": None if np.isnan(t) else round(float(t), 1),\n                        \"risk_12h\": round(a, 1), \"risk_24h\": round(b, 1), \"risk_48h\": round(c, 1), \"band\": bd}\n                       for e, d, t, a, b, c, bd in zip(new[\"event_id\"], new[\"dist_min_ci_0_5h\"], hours, p[:, 0], p[:, 1], p[:, 2], band)],\n         \"data/raw/test.csv, models/fire_risk_model.joblib\")\n\n\n# Run main() only when this file is run directly (not when imported).\nif __name__ == \"__main__\":\n    main()\n",
+   "type": "code",
+   "lang": "python"
+  },
+  {
+   "label": "Input",
+   "value": "data/processed/train_clean.csv"
+  }
+ ]
+}

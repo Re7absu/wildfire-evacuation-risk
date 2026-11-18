@@ -116,10 +116,27 @@ def score(probs: np.ndarray, time: np.ndarray, event: np.ndarray) -> dict[str, f
 
 
 # Scoring function in the format sklearn expects (used by cross-validation and tuning).
-def hybrid_scorer(model: MultiHorizonModel, X: pd.DataFrame, y: np.ndarray) -> float:
+def hybrid_scorer(model: BaseEstimator, X: pd.DataFrame, y: np.ndarray) -> float:
     """sklearn scorer: the Hybrid score (higher is better)."""
     y = np.asarray(y, dtype=float)
     return score(model.predict_proba(X), y[:, 0], y[:, 1])["hybrid"]
+
+
+# The two parts of the Hybrid score as separate scorers, for the comparison table.
+def c_index_scorer(model: BaseEstimator, X: pd.DataFrame, y: np.ndarray) -> float:
+    """sklearn scorer: C-index (higher is better)."""
+    y = np.asarray(y, dtype=float)
+    return score(model.predict_proba(X), y[:, 0], y[:, 1])["c_index"]
+
+
+def neg_brier_scorer(model: BaseEstimator, X: pd.DataFrame, y: np.ndarray) -> float:
+    """sklearn scorer: minus the weighted Brier score (sklearn always maximises)."""
+    y = np.asarray(y, dtype=float)
+    return -score(model.predict_proba(X), y[:, 0], y[:, 1])["brier"]
+
+
+# All three scores together, for cross_validate.
+SCORING = {"hybrid": hybrid_scorer, "c_index": c_index_scorer, "neg_brier": neg_brier_scorer}
 
 
 # Turn a risk percentage into a simple label for decision makers.

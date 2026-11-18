@@ -51,7 +51,7 @@
     <span class="eyebrow">Wildfire evacuation risk · model results</span>
     <h1>Wildfire Evacuation Risk Model</h1>
     <p>On fires it had never seen, the model scored <b data-draw="val" data-source="test_scores" data-where="metric=hybrid" data-field="value" data-fmt="3">—</b> on the competition's Hybrid score, against <b data-draw="val" data-source="model_cv" data-where="model=Baseline (average)" data-field="hybrid" data-fmt="3">—</b> for a model that just guesses the average.</p>
-    <p class="muted">It predicts the chance (%) that a wildfire comes within 5 km of an evacuation zone within 12, 24, 48 and 72 hours, using only the fire's first 5 hours. Data: WiDS Global Datathon 2026.</p>
+    <p class="muted">A survival model (Random Survival Forest) predicts <em>when</em> a wildfire will come within 5 km of an evacuation zone, and the chance (%) it happens within 12, 24, 48 and 72 hours, using only the fire's first 5 hours. Fires that were never seen to hit are handled as censored. Data: WiDS Global Datathon 2026.</p>
   </header>
 
   <section class="card" id="scorecard" aria-label="Scorecard">
@@ -91,8 +91,9 @@
     <section class="card" id="timing">
       <span class="eyebrow">When</span>
       <h2>Fires that hit, hit early</h2>
-      <p class="muted">Training fires that had reached a zone by each time limit.</p>
-      <div class="chart" data-draw="timing" data-source="label_counts" id="chart-timing"></div>
+      <p class="muted">Kaplan–Meier curve: share of training fires that had reached a zone by each hour, counting fires we stopped watching correctly.</p>
+      <div class="legend"><span><i class="sw" style="background: var(--color-fg)"></i>All fires</span><span><i class="sw hit"></i>Started within 5 km</span><span><i class="sw nohit"></i>Started beyond 5 km</span></div>
+      <div class="chart" data-draw="timing" data-source="km" id="chart-timing"></div>
     </section>
 
     <section class="card" id="score-parts">
@@ -106,8 +107,9 @@
   <div class="grid2">
     <section class="card" id="models">
       <span class="eyebrow">Model choice</span>
-      <h2>Tree models beat a simple guess by a wide margin</h2>
+      <h2>Survival models vs. classification</h2>
       <p class="muted">Hybrid score, 5-fold cross-validation on the training fires.</p>
+      <div class="legend"><span><i class="sw" data-draw="swatch-final"></i>Final model</span><span><i class="sw" data-draw="swatch-surv"></i>Other survival models</span><span><i class="sw nohit"></i>Classification and baseline</span></div>
       <div class="chart" data-draw="models" data-source="model_cv" id="chart-models"></div>
     </section>
 
@@ -135,7 +137,7 @@
     </div>
     <div class="tablewrap">
       <table data-source="new_fires" data-row-key="event_id" aria-label="Predicted risk for new fires">
-        <thead><tr><th data-field="event_id">Fire</th><th data-field="distance_km">Distance (km)</th><th data-field="risk_12h">12 h %</th><th data-field="risk_24h">24 h %</th><th data-field="risk_48h">48 h %</th><th data-field="band">Band</th></tr></thead>
+        <thead><tr><th data-field="event_id">Fire</th><th data-field="distance_km">Distance (km)</th><th data-field="predicted_hours">Predicted hit (h)</th><th data-field="risk_12h">12 h %</th><th data-field="risk_24h">24 h %</th><th data-field="risk_48h">48 h %</th><th data-field="band">Band</th></tr></thead>
         <tbody data-draw="fire-table"></tbody>
       </table>
     </div>
@@ -154,8 +156,8 @@
       <h2>Limitations</h2>
       <ul>
         <li>Small data: <span data-draw="val" data-source="fire_stats" data-row="0" data-field="fires" data-fmt="int">—</span> fires in total, so every score has some uncertainty.</li>
-        <li>Weaker at predicting <em>when</em> a fire hits than <em>whether</em> it does.</li>
-        <li>The 72 hour risk is about 98% for every fire, a side effect of the scoring rule. Use 12, 24 and 48 hours for decisions.</li>
+        <li>Most predicted hit times are close, but a few late hits are predicted far too early.</li>
+        <li>No fire was watched beyond about 67 hours, so the 72 hour risk equals the risk at the end of the data.</li>
         <li>No weather, wind or terrain data yet. Adding it is the best next step.</li>
       </ul>
       <details id="glossary">
@@ -164,6 +166,8 @@
           <li><b>Hybrid score</b>: 0.3 × C-index + 0.7 × (1 − weighted Brier). Higher is better.</li>
           <li><b>C-index</b>: how often the more urgent of two fires is ranked first.</li>
           <li><b>Brier score</b>: average squared gap between predicted chance and what happened (0 is perfect).</li>
+          <li><b>Survival model</b>: learns how the chance of a hit grows over time, using every fire, including those we stopped watching before they hit (censored).</li>
+          <li><b>Kaplan–Meier curve</b>: the standard way to show the share of fires that have hit over time when some fires are censored.</li>
           <li><b>Cross-validation</b>: the training fires are split into 5 parts; each part is scored by a model trained on the other 4.</li>
         </ul>
       </details>
@@ -192,11 +196,10 @@
   dash.calc('lift', {
     inputs: ['model_cv'],
     title: 'Gain over the baseline',
-    description: 'Tuned Random Forest Hybrid score minus the baseline score (cross-validation).',
+    description: 'Final model Hybrid score minus the baseline score (cross-validation).',
     fn: (models) => {
-      const get = (name) => +(models.find((m) => m.model === name) || {}).hybrid;
-      const baseline = get('Baseline (average)');
-      const tuned = get('Random Forest (tuned)');
+      const baseline = +(models.find((m) => m.model === 'Baseline (average)') || {}).hybrid;
+      const tuned = +(models.find((m) => m.final === true || m.final === 'true') || {}).hybrid;
       return [{ baseline, tuned, gain: tuned - baseline }];
     },
   });
@@ -303,22 +306,34 @@
       .on('pointerleave', () => tip.hide());
   });
 
-  // ---------- Timing: hits reached by each limit ----------
+  // ---------- Timing: Kaplan-Meier curves ----------
   dash.draw('timing', (el) => {
-    const rows = wr.rows(el, 'label_counts'); if (!rows) return;
+    const rows = wr.rows(el, 'km'); if (!rows) return;
     el.replaceChildren();
-    const W = Math.max(el.clientWidth, 280), H = 220, m = { t: 22, r: 18, b: 30, l: 36 };
-    const svg = wr.svg(el, H, 'Line of how many fires had hit by 12, 24, 48 and 72 hours; it rises steeply then flattens.');
-    const x = d3.scalePoint().domain(rows.map((r) => r.horizon)).range([m.l, W - m.r]).padding(0.3);
-    const y = d3.scaleLinear().domain([0, d3.max(rows, (r) => +r.hit) * 1.1]).nice().range([H - m.b, m.t]);
+    const W = Math.max(el.clientWidth, 280), H = 240, m = { t: 10, r: 14, b: 30, l: 40 };
+    const svg = wr.svg(el, H, 'Kaplan-Meier curves of the share of fires that have reached a zone over 72 hours: steep in the first 12 hours, near 100% for fires within 5 km, zero beyond 5 km.');
+    const x = d3.scaleLinear().domain([0, 72]).range([m.l, W - m.r]);
+    const y = d3.scaleLinear().domain([0, 100]).range([H - m.b, m.t]);
     svg.append('g').attr('class', 'grid').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - m.l - m.r)).tickFormat('')).call((g) => g.select('.domain').remove());
-    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickFormat((d) => 'by ' + d));
-    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4));
-    svg.append('path').datum(rows).attr('d', d3.line().x((r) => x(r.horizon)).y((r) => y(+r.hit))).style('fill', 'none').style('stroke', dash.colors[0]).attr('stroke-width', 2.5);
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(0,${H - m.b})`).call(d3.axisBottom(x).tickValues([0, 12, 24, 48, 72]).tickFormat((d) => d + ' h'));
+    svg.append('g').attr('class', 'axis').attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(4).tickFormat((d) => d + '%'));
+    const colors = { 'All fires': 'var(--color-fg)', 'Within 5 km': 'var(--cds-chart-status-critical)', 'Beyond 5 km': 'var(--cds-chart-muted)' };
+    const line = d3.line().curve(d3.curveStepAfter).x((r) => x(+r.hours)).y((r) => y(+r.pct_hit));
     const tip = wr.tip(el);
-    svg.append('g').selectAll('circle').data(rows).join('circle').attr('cx', (r) => x(r.horizon)).attr('cy', (r) => y(+r.hit)).attr('r', 5).style('fill', dash.colors[0])
-      .on('pointermove', (ev, r) => tip.show(ev, [`By ${r.horizon}`, `${r.hit} fires had hit`])).on('pointerleave', () => tip.hide());
-    svg.append('g').selectAll('text').data(rows).join('text').attr('class', 'val').attr('text-anchor', 'middle').attr('x', (r) => x(r.horizon)).attr('y', (r) => y(+r.hit) - 10).text((r) => r.hit);
+    d3.groups(rows, (r) => r.group).forEach(([g, pts]) => {
+      pts = pts.slice().sort((a, b) => +a.hours - +b.hours);
+      svg.append('path').datum(pts).attr('d', line).style('fill', 'none').style('stroke', colors[g] || dash.colors[0]).attr('stroke-width', 2.2);
+    });
+    // hover: read each curve's value at the pointer's hour
+    const groups = d3.groups(rows, (r) => r.group).map(([g, pts]) => [g, pts.slice().sort((a, b) => +a.hours - +b.hours)]);
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).style('fill', 'transparent')
+      .on('pointermove', (ev) => {
+        const hour = x.invert(d3.pointer(ev)[0]);
+        tip.show(ev, [`By ${hour.toFixed(0)} h`, ...groups.map(([g, pts]) => {
+          const last = pts.filter((p) => +p.hours <= hour).pop();
+          return `${g}: ${last && +pts[pts.length - 1].hours >= hour ? (+last.pct_hit).toFixed(0) + '%' : 'no data'}`;
+        })]);
+      }).on('pointerleave', () => tip.hide());
   });
 
   // ---------- Brier per horizon ----------
@@ -360,8 +375,8 @@
     const g = svg.append('g').selectAll('g').data(data).join('g');
     g.append('line').attr('x1', x(lo)).attr('x2', (r) => x(+r.hybrid)).attr('y1', (r) => y(r.model) + y.bandwidth() / 2).attr('y2', (r) => y(r.model) + y.bandwidth() / 2).style('stroke', 'var(--cds-chart-grid)').attr('stroke-width', 2);
     g.append('circle').attr('cx', (r) => x(+r.hybrid)).attr('cy', (r) => y(r.model) + y.bandwidth() / 2).attr('r', 6)
-      .style('fill', (r) => (r.model === 'Random Forest (tuned)' ? dash.colors[0] : 'var(--cds-chart-muted)'))
-      .on('pointermove', (ev, r) => tip.show(ev, [r.model, `Hybrid score ${(+r.hybrid).toFixed(3)}`])).on('pointerleave', () => tip.hide());
+      .style('fill', (r) => (r.final === true || r.final === 'true' ? dash.colors[0] : r.type === 'survival' ? dash.colors[1] : 'var(--cds-chart-muted)'))
+      .on('pointermove', (ev, r) => tip.show(ev, [r.model, `Hybrid score ${(+r.hybrid).toFixed(3)}`, `C-index ${(+r.c_index).toFixed(3)} · Brier ${(+r.brier).toFixed(3)}`])).on('pointerleave', () => tip.hide());
     g.append('text').attr('class', 'val').attr('x', (r) => x(+r.hybrid) + 10).attr('y', (r) => y(r.model) + y.bandwidth() / 2).attr('dy', '0.35em').text((r) => (+r.hybrid).toFixed(3));
   });
 
@@ -408,6 +423,10 @@
     svg.append('g').selectAll('text').data(data).join('text').attr('class', 'val').attr('x', (r) => x(+r.importance) + 4).attr('y', (r) => y(r.feature) + y.bandwidth() / 2).attr('dy', '0.35em').text((r) => (+r.importance).toFixed(3));
   });
 
+  // ---------- Legend swatches for the model chart ----------
+  dash.draw('swatch-final', (el) => { el.style.background = dash.colors[0]; });
+  dash.draw('swatch-surv', (el) => { el.style.background = dash.colors[1]; });
+
   // ---------- Forecast table ----------
   dash.draw('fire-table', (tb) => {
     const d = dash.data('new_fires');
@@ -416,7 +435,7 @@
     tb.replaceChildren(...rows.map((r) => {
       const tr = document.createElement('tr');
       tr.dataset.key = encodeURIComponent(r.event_id);
-      [r.event_id, (+r.distance_km).toFixed(1), (+r.risk_12h).toFixed(1), (+r.risk_24h).toFixed(1)].forEach((v) => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+      [r.event_id, (+r.distance_km).toFixed(1), r.predicted_hours == null ? 'not expected' : (+r.predicted_hours).toFixed(1), (+r.risk_12h).toFixed(1), (+r.risk_24h).toFixed(1)].forEach((v) => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
       const td48 = document.createElement('td');
       const num = document.createElement('span'); num.textContent = (+r.risk_48h).toFixed(1);
       const meter = document.createElement('span'); meter.className = 'meter'; meter.setAttribute('aria-hidden', 'true');

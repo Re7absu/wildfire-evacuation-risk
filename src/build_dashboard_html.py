@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC_PAGE = ROOT / "reports" / "dashboard" / "dashboard_v2" / "index.html"
 DATA_DIR = ROOT / "reports" / "dashboard"
 OUT = ROOT / "reports" / "dashboard.html"
-DATASETS = ["label_counts", "fires", "model_cv", "test_scores", "calibration", "importance", "new_fires"]
+DATASETS = ["label_counts", "fires", "km", "model_cv", "test_scores", "calibration", "importance", "new_fires"]
 
 # Colors, fonts and spacing the page expects, for light mode and dark mode.
 THEME = """

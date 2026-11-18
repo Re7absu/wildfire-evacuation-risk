@@ -1,6 +1,6 @@
-# Fire Crisis Risk Prediction
+# Fire Crisis Risk Prediction (Survival Analysis)
 
-Predict the **chance (%) that a wildfire gets within 5 km of an evacuation zone** within **12, 24, 48 and 72 hours**, using only the first 5 hours of data about the fire.
+Predict **when a wildfire will get within 5 km of an evacuation zone**, and the **chance (%) it happens within 12, 24, 48 and 72 hours**, using only the first 5 hours of data about the fire.
 
 Data: WiDS Worldwide Global Datathon 2026.
 
@@ -9,20 +9,28 @@ Data: WiDS Worldwide Global Datathon 2026.
 ## 1. The problem
 
 Each fire in `train.csv` has two answers:
-- `event`: 1 = the fire reached the evacuation zone, 0 = it didn't (as far as we know)
+- `event`: 1 = the fire reached the evacuation zone, 0 = **censored** (we stopped watching it before it hit)
 - `time_to_hit_hours`: when it reached the zone, or when we stopped watching it
 
-We train **one classifier per time limit** (12, 24, 48 and 72 h). Risk % = `predict_proba × 100`.
+This is **survival analysis**: 69% of fires are censored, so we don't know their full outcome. Survival models learn the whole time-to-hit curve from every fire, censored ones included (a fire last seen at 40 h still tells us it didn't hit for 40 h).
 
-**Competition rule:** if we stopped watching a fire *before* a time limit, we don't know what happened, so that fire is **skipped** for that limit.
+**Core models:**
+- **Cox Proportional Hazards (Cox PH):** each feature raises or lowers a fire's rate of hitting by a fixed factor.
+- **Random Survival Forest (RSF):** many survival trees averaged together. It can learn sharp rules like "within 5 km". **This is the final model.**
 
-**Score (higher is better):**
+From each fire's survival curve S(t):
+- **Risk by time t** = 1 − S(t), read at 12, 24, 48 and 72 h
+- **Predicted time to hit** = the hour when the risk passes 50%
+
+For comparison, we also tested one classifier per time limit (no time model) and a baseline that predicts the average.
+
+**Score (competition rule, higher is better):**
 ```
 Hybrid = 0.3 × C-index + 0.7 × (1 − Brier)
 Brier  = 0.3 × Brier@24h + 0.4 × Brier@48h + 0.3 × Brier@72h
 ```
-- **C-index:** are the most urgent fires ranked first?
-- **Brier:** are the percentages accurate? (lower is better)
+- **C-index:** are fires that hit sooner ranked as more urgent?
+- **Brier:** are the percentages accurate? (lower is better; fires whose outcome at a time limit is unknown are skipped)
 
 ## 2. Data
 
@@ -37,6 +45,8 @@ The features describe each fire's size, growth, speed, direction, distance to th
 
 ## 3. Setup and run (in WSL)
 
+Python **3.12** (required by scikit-survival). uv installs it automatically.
+
 ```bash
 cd "/mnt/c/Users/<you>/OneDrive/Desktop/New folder/fire-risk-model"
 export UV_PROJECT_ENVIRONMENT=$HOME/.venvs/fire-risk-model   # put this in ~/.bashrc
@@ -46,7 +56,7 @@ uv run jupyter lab --no-browser                              # open the notebook
 
 Run the notebooks in order: **01 → 02 → 03** (about 1 minute in total). Or run them all from the terminal:
 ```bash
-uv run jupyter nbconvert --to notebook --execute --inplace notebooks/*.ipynb
+uv run jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.ipynb notebooks/02_training.ipynb notebooks/03_evaluation.ipynb
 ```
 
 ## 4. Project structure
@@ -58,54 +68,57 @@ data/test/         test split + sample input/output
 notebooks/         01_eda, 02_training, 03_evaluation
 src/data.py        load data, make labels
 src/features.py    extra features
-src/model.py       the model + competition score
+src/survival.py    survival models (Cox PH, RSF) + Kaplan-Meier curve
+src/model.py       pipeline, per-horizon classifier (for comparison) + competition score
 src/predict.py     command line: predict a CSV file
 models/            saved model
-reports/           charts, predictions, submission.csv
+reports/           charts, predictions, submission.csv, dashboard.html
 ```
 
 ## 5. Pipeline
 
 ```mermaid
 flowchart LR
-    A[Raw data] --> B[Clean + labels]
-    B --> C[EDA]
+    A[Raw data] --> B[Clean + labels<br/>time, event]
+    B --> C[EDA + Kaplan-Meier]
     B --> D[Split 85% / 15%]
-    D --> E[Add features → fill missing → scale → model]
-    E --> F[Compare models<br/>5-fold CV]
-    F --> G[Tune best model]
-    G --> H[(Saved model)]
+    D --> E[Add features → fill missing → scale → survival model]
+    E --> F[Compare Cox PH, RSF,<br/>classifier, baseline<br/>5-fold CV]
+    F --> G[Tune, keep best survival model]
+    G --> H[(Saved RSF)]
     H --> I[Evaluate on test]
-    H --> J[predict.py → risk %]
+    H --> J[predict.py → time to hit + risk %]
 ```
 
 ## 6. What the data shows
 
-1. Only **31%** of fires reach the zone, and most do it fast. See [01_target.png](reports/figures/01_target.png).
-2. **Distance decides almost everything:** every fire that hit started within 4.7 km of the zone, and every fire that didn't was more than 5.2 km away. *When* a fire hits is the hard part. See [01_distance.png](reports/figures/01_distance.png).
-3. Distance features are the most linked to a hit. See [01_top_features.png](reports/figures/01_top_features.png).
+1. Only **31%** of fires reach the zone; the rest are censored. See [01_target.png](reports/figures/01_target.png).
+2. **Kaplan–Meier curve:** most hits happen in the first 12 hours, then the curve flattens. See [01_kaplan_meier.png](reports/figures/01_kaplan_meier.png).
+3. **Distance decides almost everything:** every fire that hit started within 4.7 km of the zone, and every censored fire was more than 5.2 km away. *When* a fire hits is the hard part. See [01_distance.png](reports/figures/01_distance.png).
+4. Distance features are the most linked to a hit. See [01_top_features.png](reports/figures/01_top_features.png).
 
 ## 7. Results
 
-**Model comparison (5-fold CV, Hybrid score):** [02_model_comparison.png](reports/figures/02_model_comparison.png)
+**Model comparison (5-fold CV):** [02_model_comparison.png](reports/figures/02_model_comparison.png)
 
-| Model | Hybrid score |
-|---|---|
-| Baseline (guess the average) | 0.738 |
-| Logistic Regression | 0.939 |
-| Gradient Boosting | 0.970 |
-| Random Forest | 0.972 |
-| **Random Forest (tuned)** | **0.976** |
+| Model | Type | Hybrid ↑ | C-index ↑ | Brier ↓ |
+|---|---|---|---|---|
+| Baseline (average) | – | 0.738 | 0.500 | 0.160 |
+| Cox PH (tuned) | survival | 0.935 | 0.914 | 0.055 |
+| Classifier per time limit (tuned) | classification | 0.976 | 0.954 | 0.014 |
+| **Random Survival Forest (tuned)** | **survival** | **0.978** | **0.956** | **0.013** |
 
-**Test set (34 unseen fires):**
+**Test set (34 unseen fires), Random Survival Forest:**
 
 | Score | Result |
 |---|---|
-| **Hybrid** | **0.971** |
-| C-index | 0.933 |
-| Brier | 0.013 |
+| **Hybrid** | **0.972** |
+| C-index (survival risk score) | 0.947 |
+| Brier | 0.014 |
+| Median error of predicted hit time (fires that hit) | 1.6 hours |
+| Fires that never hit and got no predicted hit time | 23 of 23 |
 
-Charts: [03_confusion_48h.png](reports/figures/03_confusion_48h.png), [03_calibration.png](reports/figures/03_calibration.png), [03_feature_importance.png](reports/figures/03_feature_importance.png)
+Charts: [03_survival_curves.png](reports/figures/03_survival_curves.png), [03_time_to_hit.png](reports/figures/03_time_to_hit.png), [03_calibration.png](reports/figures/03_calibration.png), [03_feature_importance.png](reports/figures/03_feature_importance.png)
 
 ## 8. Predict new fires
 
@@ -114,6 +127,7 @@ uv run python src/predict.py --input data/test/sample_input.csv --output predict
 ```
 
 The output contains your columns plus:
+- `predicted_hours_to_hit`: when the fire is expected to reach the zone (empty = not expected)
 - `risk_12h_pct` … `risk_72h_pct`: risk % for each time limit
 - `risk_percentage`: the main risk (the **48 h** risk)
 - `risk_band`: Low (0–25%), Medium (25–50%), High (50–75%) or Critical (75–100%)
@@ -122,7 +136,7 @@ To also create the competition file, add `--submission reports/submission.csv`.
 
 ## 9. Results dashboard
 
-Open **`reports/dashboard.html`** in any browser (double-click it). It shows the key results for stakeholders: scorecard, charts, and a filterable table of risk for every new fire. It needs internet once, to load the chart library.
+Open **`reports/dashboard.html`** in any browser (double-click it). It shows the key results for stakeholders: a scorecard, the Kaplan–Meier curve, model comparison, calibration, and a filterable table with the predicted hit time and risk for every new fire. It needs internet once, to load the chart library.
 
 To rebuild it after retraining the model:
 ```bash
@@ -134,6 +148,6 @@ uv run python src/build_dashboard_html.py  # write reports/dashboard.html
 
 - Only 221 fires in total.
 - The model depends almost only on distance.
-- It is weaker at predicting *when* a fire hits.
-- The 72 h value (about 98% for every fire) is a side effect of the scoring rule. Use the 12/24/48 h values for decisions.
+- Most predicted hit times are close, but a few late hits are predicted far too early.
+- No fire was watched beyond about 67 hours, so the 72 h risk equals the risk at the end of the data.
 - No weather, wind or terrain data. Adding these is the best next step.

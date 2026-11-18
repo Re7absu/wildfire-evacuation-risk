@@ -16,19 +16,16 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.calibration import calibration_curve
-from sklearn.dummy import DummyClassifier
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.inspection import permutation_importance
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
 
 # Let this script import the project's own code (src/...) and hide noisy library warnings.
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 warnings.filterwarnings("ignore")
 
-from src.data import HORIZONS, TARGET_COLS, TIME_COL, EVENT_COL, feature_columns, make_labels  # noqa: E402
-from src.model import MultiHorizonModel, hybrid_scorer, make_pipeline, risk_band, score  # noqa: E402
+from src.data import HORIZONS, TARGET_COLS, TIME_COL, EVENT_COL, make_labels  # noqa: E402
+from src.model import hybrid_scorer, risk_band, score  # noqa: E402
+from src.survival import hit_curve  # noqa: E402
 
 # Output folder, and this script's own text (saved with each file so readers can see how numbers were made).
 OUT = ROOT / "reports" / "dashboard"
@@ -65,20 +62,19 @@ def main() -> None:
                     "hours": round(getattr(r, TIME_COL), 2), "hit": int(getattr(r, EVENT_COL))}
                    for r in df.itertuples()], "data/processed/train_clean.csv")
 
-    # 3. Model comparison, 5-fold CV on the same training split as notebook 02
-    group = df[EVENT_COL] + ((df[EVENT_COL] == 1) & (df[TIME_COL] <= 12))
-    train, _ = train_test_split(df, test_size=0.15, stratify=group, random_state=42)
-    X, y = train[features], train[TARGET_COLS].to_numpy()
-    folds = list(StratifiedKFold(5, shuffle=True, random_state=42).split(X, group.loc[train.index]))
-    models = {"Baseline (average)": DummyClassifier(strategy="prior"),
-              "Logistic Regression": LogisticRegression(max_iter=5000),
-              "Gradient Boosting": GradientBoostingClassifier(random_state=42),
-              "Random Forest": RandomForestClassifier(n_estimators=300, random_state=42)}
-    rows = [{"model": n, "hybrid": round(float(cross_val_score(MultiHorizonModel(make_pipeline(c)), X, y, cv=folds,
-                                                                 scoring=hybrid_scorer, n_jobs=-1).mean()), 4)}
-            for n, c in models.items()]
-    rows.append({"model": "Random Forest (tuned)", "hybrid": round(float(bundle["cv_hybrid"]), 4)})
-    save("model_cv", rows, "data/processed/train_clean.csv (85% training split), models/fire_risk_model.joblib")
+    # 3. Model comparison (5-fold CV), saved with the model by notebook 02
+    rows = [{"model": r["model"], "type": r["type"], "hybrid": r["hybrid"], "c_index": r["c_index"],
+             "brier": r["brier"], "final": bool(r["final"])} for r in bundle["cv_table"]]
+    save("model_cv", rows, "models/fire_risk_model.joblib (comparison table from notebook 02)")
+
+    # 3b. Kaplan-Meier curves: share of fires that have hit by each hour (all fires, near vs. far)
+    near = df["dist_min_ci_0_5h"] <= 5000
+    km = []
+    for group_name, mask in [("All fires", np.ones(len(df), bool)), ("Within 5 km", near.to_numpy()), ("Beyond 5 km", ~near.to_numpy())]:
+        t, p = hit_curve(df.loc[mask, TIME_COL], df.loc[mask, EVENT_COL])
+        km += [{"group": group_name, "hours": 0.0, "pct_hit": 0.0}]
+        km += [{"group": group_name, "hours": round(float(a), 2), "pct_hit": round(float(b) * 100, 2)} for a, b in zip(t, p)]
+    save("km", km, "data/processed/train_clean.csv")
 
     # 4. Scores on the 34 held-out test fires
     probs = model.predict_proba(test[features])
@@ -106,9 +102,12 @@ def main() -> None:
     new = pd.read_csv(ROOT / "data" / "raw" / "test.csv")
     p = model.predict_proba(new[features]) * 100
     band = risk_band(p[:, 2]).astype(str)
-    save("new_fires", [{"event_id": str(e), "distance_km": round(d / 1000, 2), "risk_12h": round(a, 1), "risk_24h": round(b, 1),
-                        "risk_48h": round(c, 1), "band": bd}
-                       for e, d, a, b, c, bd in zip(new["event_id"], new["dist_min_ci_0_5h"], p[:, 0], p[:, 1], p[:, 2], band)],
+    # Predicted hours to hit from the survival model (None = not expected to hit)
+    hours = model.predict_time(new[features]) if hasattr(model, "predict_time") else np.full(len(new), np.nan)
+    save("new_fires", [{"event_id": str(e), "distance_km": round(d / 1000, 2),
+                        "predicted_hours": None if np.isnan(t) else round(float(t), 1),
+                        "risk_12h": round(a, 1), "risk_24h": round(b, 1), "risk_48h": round(c, 1), "band": bd}
+                       for e, d, t, a, b, c, bd in zip(new["event_id"], new["dist_min_ci_0_5h"], hours, p[:, 0], p[:, 1], p[:, 2], band)],
          "data/raw/test.csv, models/fire_risk_model.joblib")
 
 
