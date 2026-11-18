@@ -4,6 +4,8 @@ Predict the **chance (%) that a wildfire gets within 5 km of an evacuation zone*
 
 Data: WiDS Worldwide Global Datathon 2026.
 
+> **New here?** Read the step-by-step [Project Guide](docs/PROJECT_GUIDE.md): setup, running, troubleshooting and how to present the results.
+
 ## 1. The problem
 
 Each fire in `train.csv` has two answers:
