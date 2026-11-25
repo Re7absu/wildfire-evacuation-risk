@@ -1,8 +1,14 @@
-# Fire Crisis Risk Prediction (Survival Analysis)
+# Wildfire Evacuation Risk: Survival Analysis
 
 Predict **when a wildfire will get within 5 km of an evacuation zone**, and the **chance (%) it happens within 12, 24, 48 and 72 hours**, using only the first 5 hours of data about the fire.
 
-Data: WiDS Worldwide Global Datathon 2026.
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![scikit-survival](https://img.shields.io/badge/scikit--survival-0.28-F7931E)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-1.9-F7931E?logo=scikitlearn&logoColor=white)
+
+Data: WiDS Worldwide Global Datathon 2026 (see [Data source and terms](#data-source-and-terms)).
+
+**Result:** a Random Survival Forest scores **0.972** on the competition's hybrid metric for unseen fires, against **0.738** for a simple baseline, and predicts hit times with a median error of **1.6 hours**.
 
 > **New here?** Read the step-by-step [Project Guide](docs/PROJECT_GUIDE.md): setup, running, troubleshooting and how to present the results.
 
@@ -56,16 +62,21 @@ Brier  = 0.3 × Brier@24h + 0.4 × Brier@48h + 0.3 × Brier@72h
 
 The features describe each fire's size, growth, speed, direction, distance to the nearest evacuation zone, and start time. There are no missing values.
 
-## 3. Setup and run (in WSL)
+## 3. Setup and run
 
-Python **3.12** (required by scikit-survival). uv installs it automatically.
+Requires [uv](https://docs.astral.sh/uv/) on Linux, macOS or WSL (the project was developed in WSL Ubuntu). uv installs Python **3.12**, which scikit-survival needs, automatically.
 
 ```bash
-cd "/mnt/c/Users/<you>/OneDrive/Desktop/New folder/fire-risk-model"
-export UV_PROJECT_ENVIRONMENT=$HOME/.venvs/fire-risk-model   # put this in ~/.bashrc
-uv sync                                                      # install packages
-uv run jupyter lab --no-browser                              # open the notebooks
+git clone https://github.com/Re7absu/wildfire-evacuation-risk.git
+cd wildfire-evacuation-risk
+uv sync                              # install the exact versions in uv.lock
+uv run jupyter lab --no-browser      # open the notebooks
 ```
+
+> If the folder is inside OneDrive or another synced drive, keep the environment outside it:
+> `export UV_PROJECT_ENVIRONMENT=$HOME/.venvs/fire-risk-model` before `uv sync`.
+
+The trained model (`models/fire_risk_model.joblib`, about 21 MB) is included, so `src/predict.py` works without retraining.
 
 Run the notebooks in order: **01 → 02 → 03** (about 1 minute in total). Or run them all from the terminal:
 ```bash
@@ -112,7 +123,9 @@ flowchart LR
 
 ## 7. Results
 
-**Model comparison (5-fold CV):** [02_model_comparison.png](reports/figures/02_model_comparison.png)
+**Model comparison (5-fold CV):**
+
+![Model comparison](reports/figures/02_model_comparison.png)
 
 | Model | Type | Hybrid ↑ | C-index ↑ | Brier ↓ |
 |---|---|---|---|---|
@@ -131,7 +144,9 @@ flowchart LR
 | Median error of predicted hit time (fires that hit) | 1.6 hours |
 | Fires that never hit and got no predicted hit time | 23 of 23 |
 
-Charts: [03_survival_curves.png](reports/figures/03_survival_curves.png), [03_time_to_hit.png](reports/figures/03_time_to_hit.png), [03_calibration.png](reports/figures/03_calibration.png), [03_feature_importance.png](reports/figures/03_feature_importance.png)
+![Predicted survival curves](reports/figures/03_survival_curves.png)
+
+More charts: [03_survival_curves.png](reports/figures/03_survival_curves.png), [03_time_to_hit.png](reports/figures/03_time_to_hit.png), [03_calibration.png](reports/figures/03_calibration.png), [03_feature_importance.png](reports/figures/03_feature_importance.png)
 
 ## 8. Predict new fires
 
@@ -164,3 +179,18 @@ uv run python src/build_dashboard_html.py  # write reports/dashboard.html
 - Most predicted hit times are close, but a few late hits are predicted far too early.
 - No fire was watched beyond about 67 hours, so the 72 h risk equals the risk at the end of the data.
 - No weather, wind or terrain data. Adding these is the best next step.
+
+## 11. Future improvements
+
+- Add weather, wind and terrain features, which the limitations above point to as the biggest gap.
+- Validate on more fires, or on a later season, to test how well the model generalises.
+- Add unit tests for `src/features.py`, `src/survival.py` and the competition score in `src/model.py`.
+- Serve `predict.py` behind a small API so the risk table can be refreshed automatically.
+
+## Data source and terms
+
+The data comes from the **WiDS Worldwide Global Datathon 2026** and is included in `data/raw/` so the notebooks run as-is. It is subject to the competition's data terms; check those terms before reusing the data elsewhere.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The competition data in `data/` is not covered by this license and keeps its original terms (see [Data source and terms](#data-source-and-terms)).

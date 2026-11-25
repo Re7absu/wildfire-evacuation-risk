@@ -88,9 +88,10 @@ uv --version
 
 ### 3.3 Go to the project folder
 
-Windows drives appear under `/mnt/c/` in WSL. Use quotes, because the path contains a space:
+Clone the repository, or go to the folder where you already have it. Windows drives appear under `/mnt/c/` in WSL; put the path in double quotes if it contains a space:
 ```bash
-cd "/mnt/c/Users/<your-windows-user>/OneDrive/Desktop/New folder/fire-risk-model"
+git clone https://github.com/Re7absu/wildfire-evacuation-risk.git
+cd wildfire-evacuation-risk
 ```
 
 ### 3.4 Keep the Python environment outside OneDrive
@@ -201,7 +202,7 @@ Re-run both commands whenever you retrain the model, so the dashboard shows the 
 | A `.venv` folder appears inside the project | `UV_PROJECT_ENVIRONMENT` is not set | Redo step 3.4, delete the `.venv` folder, then run `uv sync` |
 | `No module named 'sksurv'` | Packages not installed, or the wrong kernel is selected | Run `uv sync`, then pick the **Fire Risk (uv)** kernel |
 | scikit-survival fails to install | A Python other than 3.12 is being used | Keep `.python-version` at `3.12` and run `uv sync` again |
-| `No such file or directory` with the path | The space in "New folder" | Put the path in double quotes |
+| `No such file or directory` with the path | A space in the folder path | Put the path in double quotes |
 | `FileNotFoundError: train_clean.csv` | Notebooks run out of order | Run 01, then 02, then 03 |
 | `FileNotFoundError: fire_risk_model.joblib` | The model has not been trained yet | Run notebook 02 |
 | `Input is missing columns: [...]` | Wrong CSV given to `predict.py` | Use a file with the same columns as `data/raw/test.csv` |
