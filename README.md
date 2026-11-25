@@ -32,6 +32,19 @@ Brier  = 0.3 × Brier@24h + 0.4 × Brier@48h + 0.3 × Brier@72h
 - **C-index:** are fires that hit sooner ranked as more urgent?
 - **Brier:** are the percentages accurate? (lower is better; fires whose outcome at a time limit is unknown are skipped)
 
+## Technologies
+
+| Area | Tools |
+|---|---|
+| Language | Python 3.12 |
+| Environment and packages | [uv](https://docs.astral.sh/uv/) (`pyproject.toml` + `uv.lock`), run in WSL (Ubuntu) |
+| Survival analysis | scikit-survival (Cox PH, Random Survival Forest, Kaplan–Meier) |
+| Machine learning | scikit-learn (pipelines, cross-validation, grid search) |
+| Data and charts | pandas, numpy, matplotlib |
+| Notebooks | JupyterLab, nbconvert |
+| Model saving | joblib |
+| Dashboard | Single HTML file with d3.js |
+
 ## 2. Data
 
 | File | Rows | Content |
