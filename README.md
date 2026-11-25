@@ -190,3 +190,7 @@ uv run python src/build_dashboard_html.py  # write reports/dashboard.html
 ## Data source and terms
 
 The data comes from the **WiDS Worldwide Global Datathon 2026** and is included in `data/raw/` so the notebooks run as-is. It is subject to the competition's data terms; check those terms before reusing the data elsewhere.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The competition data in `data/` is not covered by this license and keeps its original terms (see [Data source and terms](#data-source-and-terms)).
